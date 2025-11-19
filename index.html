@@ -273,7 +273,7 @@
   <div id="app" class="flex h-full"><!-- Sidebar -->
    <div class="sidebar w-64 shadow-lg" id="sidebar">
     <div class="p-6 flex-1 overflow-y-auto">
-     <div class="mb-8 flex justify-center"><img src="LINK_LOGO_GITHUB_ANDA_DI_SINI" alt="Logo Alumni" style="max-width: 160px; height: auto;">
+     <div class="mb-8 flex justify-center"><img src="LOGO PONDOK.png" alt="Logo Alumni" style="max-width: 70px; height: auto;">
      </div>
      <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Pendidikan</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas | Pengabdian</span> </a>
       <div class="border-t mt-4 pt-4 mb-4" id="adminMenuSection" style="display: none;">
@@ -1307,7 +1307,7 @@
     function renderPesanMasuk(content) {
       let html = `
         <div class="content-card">
-          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Pesan Masuk dari Alumni</h2>
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;"></h2>
           <div class="space-y-4">
       `;
       
@@ -1543,35 +1543,30 @@
           <form id="adminAlumniForm">
             <div class="mb-4">
               <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fa fa-user"></i>
                 <span>Nama</span>
               </label>
               <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
               <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fa fa-birthday-cake"></i>
                 <span>Tempat, Tanggal Lahir</span>
               </label>
               <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
               <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fa fa-calendar-alt"></i>
                 <span>Tahun Masuk</span>
               </label>
               <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
               <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fa fa-calendar-check"></i>
                 <span>Tahun Lulus</span>
               </label>
               <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
               <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fa fa-venus-mars"></i>
                 <span>Jenis Kelamin</span>
               </label>
               <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
@@ -1582,21 +1577,18 @@
             </div>
             <div class="mb-4">
               <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fab fa-whatsapp"></i>
                 <span>Nomor WhatsApp</span>
               </label>
               <input type="tel" name="no_whatsapp" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: 081234567890" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
               <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fa fa-university"></i>
                 <span>Kelanjutan Pendidikan</span>
               </label>
               <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                <i class="fa fa-money-bill-wave"></i>
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">>
                 <span>Status Iuran</span>
               </label>
               <select name="iuran_status" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
