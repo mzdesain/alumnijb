@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistem Pengontrolan Alumni</title>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <style>
     body {
       box-sizing: border-box;
@@ -15,6 +15,7 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       height: 100%;
+      background-color: #f0f4f8;
     }
     html {
       height: 100%;
@@ -22,6 +23,7 @@
     .sidebar {
       transition: all 0.3s;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      background-color: #ffffff;
     }
     .menu-item {
       transition: all 0.2s;
@@ -29,9 +31,14 @@
       align-items: center;
       gap: 12px;
       font-weight: 500;
+      color: #1f2937;
     }
     .menu-item:hover {
       transform: translateX(5px);
+    }
+    .menu-item.active {
+      background-color: #3b82f6;
+      color: #ffffff;
     }
     .menu-item i {
       width: 20px;
@@ -44,22 +51,11 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #3b82f6;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
     .stat-card {
       border-radius: 16px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.07);
       transition: transform 0.2s, box-shadow 0.2s;
+      background-color: #ffffff;
     }
     .stat-card:hover {
       transform: translateY(-5px);
@@ -69,6 +65,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      background-color: #ffffff;
     }
     .btn-modern {
       border-radius: 10px;
@@ -76,22 +73,28 @@
       transition: all 0.2s;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .btn-modern:hover {
+    .btn-modern:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .btn-modern:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
     .modal-backdrop {
       backdrop-filter: blur(4px);
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body>
   <div id="app" class="flex h-full"><!-- Sidebar -->
    <div class="sidebar w-64 shadow-lg" id="sidebar">
     <div class="p-6">
-     <div class="flex items-center gap-3 mb-8"><i class="fa fa-graduation-cap text-3xl"></i>
-      <h1 class="text-xl font-bold" id="websiteTitle">Sistem Pengontrolan Alumni</h1>
+     <div class="flex items-center gap-3 mb-8"><i class="fa fa-graduation-cap text-3xl" style="color: #3b82f6;"></i>
+      <h1 class="text-xl font-bold" style="color: #1f2937;">Sistem Pengontrolan Alumni</h1>
      </div>
      <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Kelanjutan Pendidikan</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas/Pengabdian</span> </a>
       <div class="border-t mt-4 pt-4 mb-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>📝 Form Pendaftaran</span> </a>
@@ -126,161 +129,771 @@
    </div>
   </div>
   <script>
-    // Configuration
-    const defaultConfig = {
-      background_color: "#f0f4f8",
-      sidebar_color: "#ffffff",
-      primary_color: "#3b82f6",
-      text_color: "#1f2937",
-      secondary_color: "#6b7280",
-      website_title: "Sistem Pengontrolan Alumni",
-      wa_cewek: "https://chat.whatsapp.com/cewek",
-      wa_cowok: "https://chat.whatsapp.com/cowok"
+    // ========================================
+    // FIREBASE CONFIGURATION
+    // ========================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyD2EJdvk7_mpXn_e3IE3r8uS8CfahxlKJI",
+      authDomain: "alumnijb.firebaseapp.com",
+      projectId: "alumnijb",
+      storageBucket: "alumnijb.firebasestorage.app",
+      messagingSenderId: "1058978961953",
+      appId: "1:1058978961953:web:ceafd257f7cd47a5960de1",
+      measurementId: "G-MN5D90P346"
     };
 
-    // State
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const alumniCollection = db.collection('alumni');
+
+    // ========================================
+    // STATE MANAGEMENT
+    // ========================================
     let alumniData = [];
     let isAdmin = false;
     let currentPage = 'beranda';
+    let unsubscribe = null;
 
-    // Data Handler
-    const dataHandler = {
-      onDataChanged(data) {
-        alumniData = data;
-        if (currentPage) {
-          loadPage(currentPage);
-        }
-      }
-    };
-
-    // Initialize SDKs
-    async function initApp() {
-      const dataResult = await window.dataSdk.init(dataHandler);
-      if (!dataResult.isOk) {
-        console.error("Failed to initialize data SDK");
-        return;
-      }
-
-      if (window.elementSdk) {
-        window.elementSdk.init({
-          defaultConfig,
-          onConfigChange: async (config) => {
-            document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
-            document.getElementById('sidebar').style.backgroundColor = config.sidebar_color || defaultConfig.sidebar_color;
-            document.getElementById('websiteTitle').textContent = config.website_title || defaultConfig.website_title;
-            document.getElementById('websiteTitle').style.color = config.text_color || defaultConfig.text_color;
-            
-            const menuItems = document.querySelectorAll('.menu-item');
-            menuItems.forEach(item => {
-              item.style.color = config.text_color || defaultConfig.text_color;
-            });
-            
-            const activeItem = document.querySelector('.menu-item[style*="background"]');
-            if (activeItem) {
-              activeItem.style.backgroundColor = config.primary_color || defaultConfig.primary_color;
-              activeItem.style.color = '#ffffff';
-            }
-
-            const buttons = document.querySelectorAll('button[type="submit"], .btn-primary');
-            buttons.forEach(btn => {
-              btn.style.backgroundColor = config.primary_color || defaultConfig.primary_color;
-              btn.style.color = '#ffffff';
-            });
-            
-            const secondaryButtons = document.querySelectorAll('button[type="button"]:not(.btn-primary), .btn-secondary');
-            secondaryButtons.forEach(btn => {
-              btn.style.backgroundColor = config.secondary_color || defaultConfig.secondary_color;
-              btn.style.color = '#ffffff';
-            });
-          },
-          mapToCapabilities: (config) => ({
-            recolorables: [
-              {
-                get: () => config.background_color || defaultConfig.background_color,
-                set: (value) => {
-                  if (window.elementSdk) {
-                    window.elementSdk.setConfig({ background_color: value });
-                  }
-                }
-              },
-              {
-                get: () => config.sidebar_color || defaultConfig.sidebar_color,
-                set: (value) => {
-                  if (window.elementSdk) {
-                    window.elementSdk.setConfig({ sidebar_color: value });
-                  }
-                }
-              },
-              {
-                get: () => config.text_color || defaultConfig.text_color,
-                set: (value) => {
-                  if (window.elementSdk) {
-                    window.elementSdk.setConfig({ text_color: value });
-                  }
-                }
-              },
-              {
-                get: () => config.primary_color || defaultConfig.primary_color,
-                set: (value) => {
-                  if (window.elementSdk) {
-                    window.elementSdk.setConfig({ primary_color: value });
-                  }
-                }
-              },
-              {
-                get: () => config.secondary_color || defaultConfig.secondary_color,
-                set: (value) => {
-                  if (window.elementSdk) {
-                    window.elementSdk.setConfig({ secondary_color: value });
-                  }
-                }
-              }
-            ],
-            borderables: [],
-            fontEditable: undefined,
-            fontSizeable: undefined
-          }),
-          mapToEditPanelValues: (config) => new Map([
-            ["website_title", config.website_title || defaultConfig.website_title],
-            ["wa_cewek", config.wa_cewek || defaultConfig.wa_cewek],
-            ["wa_cowok", config.wa_cowok || defaultConfig.wa_cowok]
-          ])
+    // ========================================
+    // FIREBASE FUNCTIONS
+    // ========================================
+    
+    // Real-time listener untuk data alumni
+    function subscribeToAlumni() {
+      unsubscribe = alumniCollection.onSnapshot((snapshot) => {
+        alumniData = [];
+        snapshot.forEach((doc) => {
+          alumniData.push({
+            id: doc.id,
+            ...doc.data()
+          });
         });
-
-        if (window.elementSdk.config) {
-          await dataHandler.onDataChanged(alumniData);
-        }
-      }
-
-      loadPage('beranda');
+        // Sort by created_at descending
+        alumniData.sort((a, b) => {
+          const dateA = a.created_at ? new Date(a.created_at) : new Date(0);
+          const dateB = b.created_at ? new Date(b.created_at) : new Date(0);
+          return dateB - dateA;
+        });
+        loadPage(currentPage);
+      }, (error) => {
+        console.error("Error fetching alumni:", error);
+        showToast('❌ Gagal memuat data dari Firebase', 'error');
+      });
     }
 
+    // Tambah alumni baru
+    async function addAlumni(alumniObj) {
+      try {
+        await alumniCollection.add(alumniObj);
+        return { success: true };
+      } catch (error) {
+        console.error("Error adding alumni:", error);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // Update alumni
+    async function updateAlumni(id, updates) {
+      try {
+        await alumniCollection.doc(id).update(updates);
+        return { success: true };
+      } catch (error) {
+        console.error("Error updating alumni:", error);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // Hapus alumni
+    async function deleteAlumni(id) {
+      try {
+        await alumniCollection.doc(id).delete();
+        return { success: true };
+      } catch (error) {
+        console.error("Error deleting alumni:", error);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // ========================================
+    // UI FUNCTIONS
+    // ========================================
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-8 right-8 px-6 py-3 rounded-lg shadow-lg transition-all';
+      toast.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444';
+      toast.style.color = '#ffffff';
+      toast.style.zIndex = '2000';
+      toast.innerHTML = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Set active menu
+    function setActiveMenu(page) {
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      const activeItem = document.querySelector(`.menu-item[data-page="${page}"]`);
+      if (activeItem) {
+        activeItem.classList.add('active');
+      }
+    }
+
+    // ========================================
+    // PAGE RENDERING
+    // ========================================
+
+    function loadPage(page) {
+      currentPage = page;
+      const content = document.getElementById('mainContent');
+      setActiveMenu(page);
+      
+      switch(page) {
+        case 'beranda':
+          renderBeranda(content);
+          break;
+        case 'alumni':
+          renderAlumni(content);
+          break;
+        case 'pendidikan':
+          renderPendidikan(content);
+          break;
+        case 'iuran':
+          renderIuran(content);
+          break;
+        case 'whatsapp':
+          renderWhatsApp(content);
+          break;
+        case 'tugas':
+          renderTugas(content);
+          break;
+        case 'form-daftar':
+          renderFormDaftar(content);
+          break;
+      }
+    }
+
+    function renderBeranda(content) {
+      const totalAlumni = alumniData.length;
+      const melanjutkanPendidikan = alumniData.filter(a => a.kelanjutan_pendidikan && a.kelanjutan_pendidikan !== '-').length;
+      const iuranLunas = alumniData.filter(a => a.iuran_status === 'Lunas').length;
+
+      content.innerHTML = `
+        <div class="content-card">
+          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Dashboard Alumni</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="stat-card p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm font-medium mb-2" style="color: #6b7280;">Total Alumni</div>
+                  <div class="text-4xl font-bold" style="color: #3b82f6;">${totalAlumni}</div>
+                </div>
+                <div class="text-5xl" style="color: #3b82f6; opacity: 0.2;">
+                  <i class="fa fa-users"></i>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm font-medium mb-2" style="color: #6b7280;">Melanjutkan Pendidikan</div>
+                  <div class="text-4xl font-bold" style="color: #3b82f6;">${melanjutkanPendidikan}</div>
+                </div>
+                <div class="text-5xl" style="color: #3b82f6; opacity: 0.2;">
+                  <i class="fa fa-user-graduate"></i>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm font-medium mb-2" style="color: #6b7280;">Iuran Lunas</div>
+                  <div class="text-4xl font-bold" style="color: #3b82f6;">${iuranLunas}</div>
+                </div>
+                <div class="text-5xl" style="color: #3b82f6; opacity: 0.2;">
+                  <i class="fa fa-check-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAlumni(content) {
+      let html = `
+        <div class="content-card">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold" style="color: #1f2937;">Data Alumni</h2>
+            ${isAdmin ? '<button id="addAlumniBtn" class="btn-modern px-6 py-3" style="background-color: #3b82f6; color: #ffffff;"><i class="fa fa-user-plus mr-2"></i>Tambah Alumni</button>' : ''}
+          </div>
+          <div class="table-modern">
+            <table class="w-full">
+              <thead style="background-color: #3b82f6; color: #ffffff;">
+                <tr>
+                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
+                  <th class="px-6 py-4 text-left font-semibold">Jenis Kelamin</th>
+                  <th class="px-6 py-4 text-left font-semibold">Tahun Masuk</th>
+                  <th class="px-6 py-4 text-left font-semibold">Tahun Lulus</th>
+                  ${isAdmin ? '<th class="px-6 py-4 text-left font-semibold">Aksi</th>' : ''}
+                </tr>
+              </thead>
+              <tbody>
+      `;
+      
+      if (alumniData.length === 0) {
+        html += `
+          <tr>
+            <td colspan="${isAdmin ? 5 : 4}" class="px-6 py-8 text-center" style="color: #6b7280;">
+              <i class="fa fa-inbox text-4xl mb-3" style="display: block;"></i>
+              Belum ada data alumni
+            </td>
+          </tr>
+        `;
+      } else {
+        alumniData.forEach((alumni) => {
+          html += `
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-6 py-4" style="color: #1f2937;">${alumni.jenis_kelamin || '-'}</td>
+              <td class="px-6 py-4" style="color: #1f2937;">${alumni.tahun_masuk}</td>
+              <td class="px-6 py-4" style="color: #1f2937;">${alumni.tahun_lulus}</td>
+              ${isAdmin ? `<td class="px-6 py-4"><button class="deleteAlumniBtn btn-modern px-4 py-2 text-sm" style="background-color: #ef4444; color: #ffffff;" data-id="${alumni.id}"><i class="fa fa-trash mr-1"></i>Hapus</button></td>` : ''}
+            </tr>
+          `;
+        });
+      }
+      
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+      
+      content.innerHTML = html;
+      
+      if (isAdmin) {
+        const addBtn = document.getElementById('addAlumniBtn');
+        if (addBtn) {
+          addBtn.addEventListener('click', showAlumniForm);
+        }
+        
+        document.querySelectorAll('.deleteAlumniBtn').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const button = e.currentTarget;
+            const id = button.getAttribute('data-id');
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i>Menghapus...';
+            
+            const result = await deleteAlumni(id);
+            
+            if (result.success) {
+              showToast('✅ Alumni berhasil dihapus');
+            } else {
+              showToast('❌ Gagal menghapus alumni', 'error');
+              button.disabled = false;
+              button.innerHTML = '<i class="fa fa-trash mr-1"></i>Hapus';
+            }
+          });
+        });
+      }
+    }
+
+    function renderPendidikan(content) {
+      let html = `
+        <div class="content-card">
+          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Kelanjutan Pendidikan</h2>
+          <div class="table-modern">
+            <table class="w-full">
+              <thead style="background-color: #3b82f6; color: #ffffff;">
+                <tr>
+                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
+                  <th class="px-6 py-4 text-left font-semibold">Kelanjutan Pendidikan</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+      
+      if (alumniData.length === 0) {
+        html += `
+          <tr>
+            <td colspan="2" class="px-6 py-8 text-center" style="color: #6b7280;">
+              <i class="fa fa-inbox text-4xl mb-3" style="display: block;"></i>
+              Belum ada data
+            </td>
+          </tr>
+        `;
+      } else {
+        alumniData.forEach((alumni) => {
+          html += `
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-university mr-2" style="color: #6b7280;"></i>${alumni.kelanjutan_pendidikan || '-'}</td>
+            </tr>
+          `;
+        });
+      }
+      
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+      
+      content.innerHTML = html;
+    }
+
+    function renderIuran(content) {
+      let html = `
+        <div class="content-card">
+          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Status Iuran</h2>
+          <div class="table-modern">
+            <table class="w-full">
+              <thead style="background-color: #3b82f6; color: #ffffff;">
+                <tr>
+                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
+                  <th class="px-6 py-4 text-left font-semibold">Status Iuran</th>
+                  ${isAdmin ? '<th class="px-6 py-4 text-center font-semibold">Sudah Bayar</th>' : ''}
+                </tr>
+              </thead>
+              <tbody>
+      `;
+      
+      if (alumniData.length === 0) {
+        html += `
+          <tr>
+            <td colspan="${isAdmin ? 3 : 2}" class="px-6 py-8 text-center" style="color: #6b7280;">
+              <i class="fa fa-inbox text-4xl mb-3" style="display: block;"></i>
+              Belum ada data
+            </td>
+          </tr>
+        `;
+      } else {
+        alumniData.forEach((alumni) => {
+          const statusColor = alumni.iuran_status === 'Lunas' ? '#10b981' : '#ef4444';
+          const statusIcon = alumni.iuran_status === 'Lunas' ? 'fa-check-circle' : 'fa-times-circle';
+          const isChecked = alumni.iuran_status === 'Lunas' ? 'checked' : '';
+          
+          html += `
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-6 py-4"><span class="px-4 py-2 rounded-lg text-white text-sm font-semibold inline-flex items-center gap-2" style="background-color: ${statusColor};"><i class="fa ${statusIcon}"></i>${alumni.iuran_status || 'Belum Bayar'}</span></td>
+              ${isAdmin ? `<td class="px-6 py-4 text-center"><input type="checkbox" class="iuran-checkbox w-5 h-5 cursor-pointer" data-id="${alumni.id}" ${isChecked} style="accent-color: #10b981;"></td>` : ''}
+            </tr>
+          `;
+        });
+      }
+      
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+      
+      content.innerHTML = html;
+      
+      if (isAdmin) {
+        document.querySelectorAll('.iuran-checkbox').forEach(checkbox => {
+          checkbox.addEventListener('change', async (e) => {
+            const id = e.currentTarget.getAttribute('data-id');
+            const checked = e.currentTarget.checked;
+            
+            e.currentTarget.disabled = true;
+            
+            const result = await updateAlumni(id, {
+              iuran_status: checked ? 'Lunas' : 'Belum Bayar'
+            });
+            
+            if (result.success) {
+              showToast(checked ? '✅ Status diubah menjadi Lunas' : '❌ Status diubah menjadi Belum Bayar');
+            } else {
+              showToast('❌ Gagal mengubah status', 'error');
+              e.currentTarget.checked = !checked;
+            }
+            
+            e.currentTarget.disabled = false;
+          });
+        });
+      }
+    }
+
+    function renderWhatsApp(content) {
+      content.innerHTML = `
+        <div class="content-card">
+          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Group WhatsApp</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="stat-card p-8 text-center">
+              <div class="text-6xl mb-4" style="color: #25D366;">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3" style="color: #1f2937;">Group Cewek</h3>
+              <p class="mb-4" style="color: #6b7280;">Bergabunglah dengan group alumni perempuan</p>
+              <a href="https://chat.whatsapp.com/cewek" target="_blank" rel="noopener noreferrer" class="btn-modern inline-flex items-center gap-2 px-6 py-3" style="background-color: #25D366; color: #ffffff;"><i class="fab fa-whatsapp"></i>Gabung Group</a>
+            </div>
+            <div class="stat-card p-8 text-center">
+              <div class="text-6xl mb-4" style="color: #25D366;">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3" style="color: #1f2937;">Group Cowok</h3>
+              <p class="mb-4" style="color: #6b7280;">Bergabunglah dengan group alumni laki-laki</p>
+              <a href="https://chat.whatsapp.com/cowok" target="_blank" rel="noopener noreferrer" class="btn-modern inline-flex items-center gap-2 px-6 py-3" style="background-color: #25D366; color: #ffffff;"><i class="fab fa-whatsapp"></i>Gabung Group</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTugas(content) {
+      let html = `
+        <div class="content-card">
+          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Tugas/Pengabdian</h2>
+          <div class="table-modern">
+            <table class="w-full">
+              <thead style="background-color: #3b82f6; color: #ffffff;">
+                <tr>
+                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
+                  <th class="px-6 py-4 text-left font-semibold">Tugas</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+      
+      if (alumniData.length === 0) {
+        html += `
+          <tr>
+            <td colspan="2" class="px-6 py-8 text-center" style="color: #6b7280;">
+              <i class="fa fa-inbox text-4xl mb-3" style="display: block;"></i>
+              Belum ada data
+            </td>
+          </tr>
+        `;
+      } else {
+        alumniData.forEach((alumni) => {
+          html += `
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-clipboard-list mr-2" style="color: #6b7280;"></i>${alumni.tugas || '-'}</td>
+            </tr>
+          `;
+        });
+      }
+      
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+      
+      content.innerHTML = html;
+    }
+
+    function renderFormDaftar(content) {
+      content.innerHTML = `
+        <div class="content-card max-w-3xl mx-auto">
+          <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4" style="background-color: rgba(16, 185, 129, 0.1);">
+              <i class="fa fa-user-plus text-4xl" style="color: #10b981;"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;">Form Pendaftaran Alumni</h2>
+            <p style="color: #6b7280;">Silakan isi data Anda dengan lengkap dan benar</p>
+          </div>
+          
+          <div class="stat-card p-8">
+            <form id="publicAlumniForm">
+              <div class="mb-5">
+                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                  <i class="fa fa-user"></i>
+                  <span>Nama Lengkap</span>
+                  <span style="color: #ef4444;">*</span>
+                </label>
+                <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Masukkan nama lengkap" required style="border-color: #e5e7eb;">
+              </div>
+
+              <div class="mb-5">
+                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                  <i class="fa fa-birthday-cake"></i>
+                  <span>Tempat, Tanggal Lahir</span>
+                  <span style="color: #ef4444;">*</span>
+                </label>
+                <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: Jakarta, 15 Agustus 2000" required style="border-color: #e5e7eb;">
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                <div>
+                  <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                    <i class="fa fa-calendar-alt"></i>
+                    <span>Tahun Masuk</span>
+                    <span style="color: #ef4444;">*</span>
+                  </label>
+                  <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: 2018" required style="border-color: #e5e7eb;">
+                </div>
+
+                <div>
+                  <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                    <i class="fa fa-calendar-check"></i>
+                    <span>Tahun Lulus</span>
+                    <span style="color: #ef4444;">*</span>
+                  </label>
+                  <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: 2021" required style="border-color: #e5e7eb;">
+                </div>
+              </div>
+
+              <div class="mb-5">
+                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                  <i class="fa fa-venus-mars"></i>
+                  <span>Jenis Kelamin</span>
+                  <span style="color: #ef4444;">*</span>
+                </label>
+                <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+                  <option value="">Pilih Jenis Kelamin</option>
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
+                </select>
+              </div>
+
+              <div class="mb-5">
+                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                  <i class="fa fa-university"></i>
+                  <span>Kelanjutan Pendidikan</span>
+                </label>
+                <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: S1 Universitas Indonesia (Opsional)" style="border-color: #e5e7eb;">
+                <p class="text-sm mt-1" style="color: #6b7280;">Kosongkan jika tidak melanjutkan</p>
+              </div>
+
+              <div class="mb-6">
+                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                  <i class="fa fa-briefcase"></i>
+                  <span>Tugas/Pekerjaan Saat Ini</span>
+                </label>
+                <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: Software Engineer di PT. ABC (Opsional)" style="border-color: #e5e7eb;">
+                <p class="text-sm mt-1" style="color: #6b7280;">Kosongkan jika tidak/belum bekerja</p>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit" class="btn-modern flex-1 py-4 px-6 font-semibold text-lg flex items-center justify-center gap-2" style="background-color: #10b981; color: #ffffff;">
+                  <i class="fa fa-paper-plane"></i>
+                  <span>Kirim Data</span>
+                </button>
+              </div>
+
+              <div id="formMessage" class="mt-4 p-4 rounded-lg text-center font-semibold hidden"></div>
+            </form>
+          </div>
+        </div>
+      `;
+
+      const form = document.getElementById('publicAlumniForm');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>Mengirim...';
+        
+        const formData = new FormData(e.target);
+        const newAlumni = {
+          nama: formData.get('nama'),
+          ttl: formData.get('ttl'),
+          tahun_masuk: formData.get('tahun_masuk'),
+          tahun_lulus: formData.get('tahun_lulus'),
+          jenis_kelamin: formData.get('jenis_kelamin'),
+          kelanjutan_pendidikan: formData.get('kelanjutan_pendidikan') || '-',
+          iuran_status: 'Belum Bayar',
+          tugas: formData.get('tugas') || '-',
+          created_at: new Date().toISOString()
+        };
+        
+        const result = await addAlumni(newAlumni);
+        
+        const msgEl = document.getElementById('formMessage');
+        if (result.success) {
+          msgEl.innerHTML = '<i class="fa fa-check-circle mr-2"></i>Data berhasil dikirim! Terima kasih telah mendaftar.';
+          msgEl.style.backgroundColor = '#d1fae5';
+          msgEl.style.color = '#065f46';
+          msgEl.classList.remove('hidden');
+          e.target.reset();
+          showToast('✅ Data berhasil tersimpan!');
+          setTimeout(() => {
+            msgEl.classList.add('hidden');
+          }, 5000);
+        } else {
+          msgEl.innerHTML = '<i class="fa fa-exclamation-circle mr-2"></i>Gagal mengirim data. Silakan coba lagi.';
+          msgEl.style.backgroundColor = '#fee2e2';
+          msgEl.style.color = '#dc2626';
+          msgEl.classList.remove('hidden');
+        }
+        
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
+      });
+    }
+
+    // ========================================
+    // MODAL FUNCTIONS
+    // ========================================
+
+    function showAlumniForm() {
+      const modal = document.createElement('div');
+      modal.className = 'modal-backdrop fixed inset-0 flex items-center justify-center';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      modal.style.zIndex = '1000';
+      modal.innerHTML = `
+        <div class="rounded-2xl shadow-2xl p-8 max-w-md w-full max-h-screen overflow-y-auto mx-4" style="background-color: #ffffff;">
+          <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="background-color: rgba(59, 130, 246, 0.1);">
+              <i class="fa fa-user-plus text-3xl" style="color: #3b82f6;"></i>
+            </div>
+            <h3 class="text-2xl font-bold" style="color: #1f2937;">Tambah Alumni</h3>
+          </div>
+          <form id="adminAlumniForm">
+            <div class="mb-4">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-user"></i>
+                <span>Nama</span>
+              </label>
+              <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-birthday-cake"></i>
+                <span>Tempat, Tanggal Lahir</span>
+              </label>
+              <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-calendar-alt"></i>
+                <span>Tahun Masuk</span>
+              </label>
+              <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-calendar-check"></i>
+                <span>Tahun Lulus</span>
+              </label>
+              <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-venus-mars"></i>
+                <span>Jenis Kelamin</span>
+              </label>
+              <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+                <option value="">Pilih</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-university"></i>
+                <span>Kelanjutan Pendidikan</span>
+              </label>
+              <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" style="border-color: #e5e7eb;">
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-money-bill-wave"></i>
+                <span>Status Iuran</span>
+              </label>
+              <select name="iuran_status" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+                <option value="Belum Bayar">Belum Bayar</option>
+                <option value="Lunas">Lunas</option>
+              </select>
+            </div>
+            <div class="mb-6">
+              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <i class="fa fa-tasks"></i>
+                <span>Tugas</span>
+              </label>
+              <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" style="border-color: #e5e7eb;">
+            </div>
+            <div class="flex gap-3">
+              <button type="submit" class="btn-modern flex-1 py-3 px-4 font-semibold flex items-center justify-center gap-2" style="background-color: #3b82f6; color: #ffffff;">
+                <i class="fa fa-save"></i>
+                <span>Simpan</span>
+              </button>
+              <button type="button" class="btn-modern flex-1 py-3 px-4 font-semibold closeModal" style="background-color: #6b7280; color: #ffffff;">
+                <i class="fa fa-times mr-2"></i>Batal
+              </button>
+            </div>
+          </form>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      modal.querySelector('.closeModal').addEventListener('click', () => {
+        modal.remove();
+      });
+      
+      modal.querySelector('#adminAlumniForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Menyimpan...';
+        
+        const formData = new FormData(e.target);
+        const newAlumni = {
+          nama: formData.get('nama'),
+          ttl: formData.get('ttl'),
+          tahun_masuk: formData.get('tahun_masuk'),
+          tahun_lulus: formData.get('tahun_lulus'),
+          jenis_kelamin: formData.get('jenis_kelamin'),
+          kelanjutan_pendidikan: formData.get('kelanjutan_pendidikan') || '-',
+          iuran_status: formData.get('iuran_status'),
+          tugas: formData.get('tugas') || '-',
+          created_at: new Date().toISOString()
+        };
+        
+        const result = await addAlumni(newAlumni);
+        
+        if (result.success) {
+          showToast('✅ Alumni berhasil ditambahkan');
+          modal.remove();
+        } else {
+          showToast('❌ Gagal menambahkan alumni', 'error');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalContent;
+        }
+      });
+    }
+
+    // ========================================
+    // EVENT LISTENERS
+    // ========================================
+
     // Navigation
-    document.querySelectorAll('.menu-item').forEach(item => {
+    document.querySelectorAll('.menu-item[data-page]').forEach(item => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
         const page = e.currentTarget.getAttribute('data-page');
-        if (page) {
-          loadPage(page);
-          document.querySelectorAll('.menu-item').forEach(mi => {
-            mi.style.backgroundColor = 'transparent';
-            const config = window.elementSdk?.config || defaultConfig;
-            mi.style.color = config.text_color || defaultConfig.text_color;
-          });
-          const config = window.elementSdk?.config || defaultConfig;
-          e.currentTarget.style.backgroundColor = config.primary_color || defaultConfig.primary_color;
-          e.currentTarget.style.color = '#ffffff';
-        }
+        loadPage(page);
       });
     });
 
-    // Login functionality
+    // Login
     document.getElementById('loginBtn').addEventListener('click', (e) => {
       e.preventDefault();
       if (isAdmin) {
         isAdmin = false;
         e.currentTarget.innerHTML = '<i class="fa fa-lock"></i><span>Login Admin</span>';
-        showToast('Berhasil logout');
+        showToast('✅ Berhasil logout');
         loadPage(currentPage);
       } else {
         document.getElementById('loginModal').classList.remove('hidden');
@@ -304,7 +917,7 @@
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('loginError').classList.add('hidden');
         document.getElementById('loginForm').reset();
-        showToast('Login berhasil! 🎉');
+        showToast('✅ Login berhasil! 🎉');
         loadPage(currentPage);
       } else {
         const errorEl = document.getElementById('loginError');
@@ -313,571 +926,15 @@
       }
     });
 
-    // Toast notification
-    function showToast(message) {
-      const toast = document.createElement('div');
-      const config = window.elementSdk?.config || defaultConfig;
-      toast.className = 'fixed bottom-8 right-8 px-6 py-3 rounded-lg shadow-lg';
-      toast.style.backgroundColor = config.primary_color || defaultConfig.primary_color;
-      toast.style.color = '#ffffff';
-      toast.style.zIndex = '2000';
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
-
-    // Load page content
-    function loadPage(page) {
-      currentPage = page;
-      const content = document.getElementById('mainContent');
-      const config = window.elementSdk?.config || defaultConfig;
-      
-      switch(page) {
-        case 'beranda':
-          content.innerHTML = `
-            <div class="content-card">
-              <h2 class="text-3xl font-bold mb-6" style="color: ${config.text_color || defaultConfig.text_color}">Dashboard Alumni</h2>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="stat-card p-6" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <div class="text-sm font-medium mb-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}">Total Alumni</div>
-                      <div class="text-4xl font-bold" style="color: ${config.primary_color || defaultConfig.primary_color}">${alumniData.length}</div>
-                    </div>
-                    <div class="text-5xl" style="color: ${config.primary_color || defaultConfig.primary_color}; opacity: 0.2;">
-                      <i class="fa fa-users"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="stat-card p-6" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <div class="text-sm font-medium mb-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}">Melanjutkan Pendidikan</div>
-                      <div class="text-4xl font-bold" style="color: ${config.primary_color || defaultConfig.primary_color}">${alumniData.filter(a => a.kelanjutan_pendidikan && a.kelanjutan_pendidikan !== '-').length}</div>
-                    </div>
-                    <div class="text-5xl" style="color: ${config.primary_color || defaultConfig.primary_color}; opacity: 0.2;">
-                      <i class="fa fa-user-graduate"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="stat-card p-6" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <div class="text-sm font-medium mb-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}">Iuran Lunas</div>
-                      <div class="text-4xl font-bold" style="color: ${config.primary_color || defaultConfig.primary_color}">${alumniData.filter(a => a.iuran_status === 'Lunas').length}</div>
-                    </div>
-                    <div class="text-5xl" style="color: ${config.primary_color || defaultConfig.primary_color}; opacity: 0.2;">
-                      <i class="fa fa-check-circle"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-          break;
-          
-        case 'alumni':
-          let alumniHTML = `
-            <div class="content-card">
-              <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold" style="color: ${config.text_color || defaultConfig.text_color}">Data Alumni</h2>
-                ${isAdmin ? '<button id="addAlumniBtn" class="btn-modern btn-primary px-6 py-3"><i class="fa fa-user-plus mr-2"></i>Tambah Alumni</button>' : ''}
-              </div>
-              <div class="table-modern" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                <table class="w-full">
-                  <thead style="background-color: ${config.primary_color || defaultConfig.primary_color}; color: #ffffff;">
-                    <tr>
-                      <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                      <th class="px-6 py-4 text-left font-semibold">Tahun Masuk</th>
-                      <th class="px-6 py-4 text-left font-semibold">Tahun Lulus</th>
-                      ${isAdmin ? '<th class="px-6 py-4 text-left font-semibold">Aksi</th>' : ''}
-                    </tr>
-                  </thead>
-                  <tbody>
-          `;
-          
-          alumniData.forEach((alumni, index) => {
-            alumniHTML += `
-              <tr style="border-bottom: 1px solid rgba(0,0,0,0.05)">
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}"><i class="fa fa-user mr-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}"></i>${alumni.nama}</td>
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}">${alumni.tahun_masuk}</td>
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}">${alumni.tahun_lulus}</td>
-                ${isAdmin ? `<td class="px-6 py-4"><button class="deleteAlumniBtn btn-modern btn-secondary px-4 py-2 text-sm" data-id="${alumni.__backendId}"><i class="fa fa-trash mr-1"></i>Hapus</button></td>` : ''}
-              </tr>
-            `;
-          });
-          
-          alumniHTML += `
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          `;
-          
-          content.innerHTML = alumniHTML;
-          
-          if (isAdmin) {
-            document.getElementById('addAlumniBtn')?.addEventListener('click', showAlumniForm);
-            document.querySelectorAll('.deleteAlumniBtn').forEach(btn => {
-              btn.addEventListener('click', async (e) => {
-                const id = e.target.getAttribute('data-id');
-                const alumni = alumniData.find(a => a.__backendId === id);
-                if (alumni) {
-                  e.target.disabled = true;
-                  e.target.textContent = 'Menghapus...';
-                  const result = await window.dataSdk.delete(alumni);
-                  if (result.isOk) {
-                    showToast('Alumni berhasil dihapus');
-                  } else {
-                    showToast('Gagal menghapus alumni');
-                    e.target.disabled = false;
-                    e.target.textContent = 'Hapus';
-                  }
-                }
-              });
-            });
-          }
-          break;
-          
-        case 'pendidikan':
-          let pendidikanHTML = `
-            <div class="content-card">
-              <h2 class="text-3xl font-bold mb-6" style="color: ${config.text_color || defaultConfig.text_color}">Kelanjutan Pendidikan</h2>
-              <div class="table-modern" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                <table class="w-full">
-                  <thead style="background-color: ${config.primary_color || defaultConfig.primary_color}; color: #ffffff;">
-                    <tr>
-                      <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                      <th class="px-6 py-4 text-left font-semibold">Kelanjutan Pendidikan</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-          `;
-          
-          alumniData.forEach((alumni, index) => {
-            pendidikanHTML += `
-              <tr style="border-bottom: 1px solid rgba(0,0,0,0.05)">
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}"><i class="fa fa-user mr-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}"></i>${alumni.nama}</td>
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}"><i class="fa fa-university mr-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}"></i>${alumni.kelanjutan_pendidikan || '-'}</td>
-              </tr>
-            `;
-          });
-          
-          pendidikanHTML += `
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          `;
-          
-          content.innerHTML = pendidikanHTML;
-          break;
-          
-        case 'iuran':
-          let iuranHTML = `
-            <div class="content-card">
-              <h2 class="text-3xl font-bold mb-6" style="color: ${config.text_color || defaultConfig.text_color}">Status Iuran</h2>
-              <div class="table-modern" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                <table class="w-full">
-                  <thead style="background-color: ${config.primary_color || defaultConfig.primary_color}; color: #ffffff;">
-                    <tr>
-                      <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                      <th class="px-6 py-4 text-left font-semibold">Status Iuran</th>
-                      ${isAdmin ? '<th class="px-6 py-4 text-center font-semibold">Sudah Bayar</th>' : ''}
-                    </tr>
-                  </thead>
-                  <tbody>
-          `;
-          
-          alumniData.forEach((alumni, index) => {
-            const statusColor = alumni.iuran_status === 'Lunas' ? '#10b981' : '#ef4444';
-            const statusIcon = alumni.iuran_status === 'Lunas' ? 'fa-check-circle' : 'fa-times-circle';
-            const isChecked = alumni.iuran_status === 'Lunas' ? 'checked' : '';
-            iuranHTML += `
-              <tr style="border-bottom: 1px solid rgba(0,0,0,0.05)">
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}"><i class="fa fa-user mr-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}"></i>${alumni.nama}</td>
-                <td class="px-6 py-4"><span class="px-4 py-2 rounded-lg text-white text-sm font-semibold inline-flex items-center gap-2" style="background-color: ${statusColor}"><i class="fa ${statusIcon}"></i>${alumni.iuran_status || 'Belum Bayar'}</span></td>
-                ${isAdmin ? `<td class="px-6 py-4 text-center"><input type="checkbox" class="iuran-checkbox w-5 h-5 cursor-pointer" data-id="${alumni.__backendId}" ${isChecked} style="accent-color: #10b981;"></td>` : ''}
-              </tr>
-            `;
-          });
-          
-          iuranHTML += `
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          `;
-          
-          content.innerHTML = iuranHTML;
-          
-          if (isAdmin) {
-            document.querySelectorAll('.iuran-checkbox').forEach(checkbox => {
-              checkbox.addEventListener('change', async (e) => {
-                const id = e.target.getAttribute('data-id');
-                const alumni = alumniData.find(a => a.__backendId === id);
-                if (alumni) {
-                  e.target.disabled = true;
-                  
-                  const updatedAlumni = {
-                    ...alumni,
-                    iuran_status: e.target.checked ? 'Lunas' : 'Belum Bayar'
-                  };
-                  
-                  const result = await window.dataSdk.update(updatedAlumni);
-                  
-                  if (result.isOk) {
-                    showToast(e.target.checked ? 'Status diubah menjadi Lunas ✅' : 'Status diubah menjadi Belum Bayar ❌');
-                  } else {
-                    showToast('Gagal mengubah status iuran');
-                    e.target.checked = !e.target.checked;
-                  }
-                  
-                  e.target.disabled = false;
-                }
-              });
-            });
-          }
-          break;
-          
-        case 'whatsapp':
-          content.innerHTML = `
-            <div class="content-card">
-              <h2 class="text-3xl font-bold mb-6" style="color: ${config.text_color || defaultConfig.text_color}">Group WhatsApp</h2>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="stat-card p-8 text-center" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                  <div class="text-6xl mb-4" style="color: ${config.primary_color || defaultConfig.primary_color}">
-                    <i class="fab fa-whatsapp"></i>
-                  </div>
-                  <h3 class="text-xl font-bold mb-3" style="color: ${config.text_color || defaultConfig.text_color}">Group Cewek</h3>
-                  <p class="mb-4" style="color: ${config.secondary_color || defaultConfig.secondary_color}">Bergabunglah dengan group alumni perempuan</p>
-                  <a href="${config.wa_cewek || defaultConfig.wa_cewek}" target="_blank" rel="noopener noreferrer" class="btn-modern btn-primary inline-flex items-center gap-2 px-6 py-3"><i class="fab fa-whatsapp"></i>Gabung Group</a>
-                </div>
-                <div class="stat-card p-8 text-center" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                  <div class="text-6xl mb-4" style="color: ${config.primary_color || defaultConfig.primary_color}">
-                    <i class="fab fa-whatsapp"></i>
-                  </div>
-                  <h3 class="text-xl font-bold mb-3" style="color: ${config.text_color || defaultConfig.text_color}">Group Cowok</h3>
-                  <p class="mb-4" style="color: ${config.secondary_color || defaultConfig.secondary_color}">Bergabunglah dengan group alumni laki-laki</p>
-                  <a href="${config.wa_cowok || defaultConfig.wa_cowok}" target="_blank" rel="noopener noreferrer" class="btn-modern btn-primary inline-flex items-center gap-2 px-6 py-3"><i class="fab fa-whatsapp"></i>Gabung Group</a>
-                </div>
-              </div>
-            </div>
-          `;
-          break;
-          
-        case 'tugas':
-          let tugasHTML = `
-            <div class="content-card">
-              <h2 class="text-3xl font-bold mb-6" style="color: ${config.text_color || defaultConfig.text_color}">Tugas/Pengabdian</h2>
-              <div class="table-modern" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                <table class="w-full">
-                  <thead style="background-color: ${config.primary_color || defaultConfig.primary_color}; color: #ffffff;">
-                    <tr>
-                      <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                      <th class="px-6 py-4 text-left font-semibold">Tugas</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-          `;
-          
-          alumniData.forEach((alumni, index) => {
-            tugasHTML += `
-              <tr style="border-bottom: 1px solid rgba(0,0,0,0.05)">
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}"><i class="fa fa-user mr-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}"></i>${alumni.nama}</td>
-                <td class="px-6 py-4" style="color: ${config.text_color || defaultConfig.text_color}"><i class="fa fa-clipboard-list mr-2" style="color: ${config.secondary_color || defaultConfig.secondary_color}"></i>${alumni.tugas || '-'}</td>
-              </tr>
-            `;
-          });
-          
-          tugasHTML += `
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          `;
-          
-          content.innerHTML = tugasHTML;
-          break;
-
-        case 'form-daftar':
-          content.innerHTML = `
-            <div class="content-card max-w-3xl mx-auto">
-              <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4" style="background-color: rgba(16, 185, 129, 0.1);">
-                  <i class="fa fa-user-plus text-4xl" style="color: #10b981;"></i>
-                </div>
-                <h2 class="text-3xl font-bold mb-2" style="color: ${config.text_color || defaultConfig.text_color}">Form Pendaftaran Alumni</h2>
-                <p style="color: ${config.secondary_color || defaultConfig.secondary_color}">Silakan isi data Anda dengan lengkap dan benar</p>
-              </div>
-              
-              <div class="stat-card p-8" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-                <form id="publicAlumniForm">
-                  <div class="mb-5">
-                    <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                      <i class="fa fa-user"></i>
-                      <span>Nama Lengkap</span>
-                      <span style="color: #ef4444;">*</span>
-                    </label>
-                    <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Masukkan nama lengkap" required style="border-color: #e5e7eb;">
-                  </div>
-
-                  <div class="mb-5">
-                    <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                      <i class="fa fa-birthday-cake"></i>
-                      <span>Tempat, Tanggal Lahir</span>
-                      <span style="color: #ef4444;">*</span>
-                    </label>
-                    <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: Jakarta, 15 Agustus 2000" required style="border-color: #e5e7eb;">
-                  </div>
-
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                    <div>
-                      <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                        <i class="fa fa-calendar-alt"></i>
-                        <span>Tahun Masuk</span>
-                        <span style="color: #ef4444;">*</span>
-                      </label>
-                      <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: 2018" required style="border-color: #e5e7eb;">
-                    </div>
-
-                    <div>
-                      <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                        <i class="fa fa-calendar-check"></i>
-                        <span>Tahun Lulus</span>
-                        <span style="color: #ef4444;">*</span>
-                      </label>
-                      <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: 2021" required style="border-color: #e5e7eb;">
-                    </div>
-                  </div>
-
-                  <div class="mb-5">
-                    <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                      <i class="fa fa-venus-mars"></i>
-                      <span>Jenis Kelamin</span>
-                      <span style="color: #ef4444;">*</span>
-                    </label>
-                    <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
-                      <option value="">Pilih Jenis Kelamin</option>
-                      <option value="Laki-laki">Laki-laki</option>
-                      <option value="Perempuan">Perempuan</option>
-                    </select>
-                  </div>
-
-                  <div class="mb-5">
-                    <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                      <i class="fa fa-university"></i>
-                      <span>Kelanjutan Pendidikan</span>
-                    </label>
-                    <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: S1 Universitas Indonesia (Opsional)" style="border-color: #e5e7eb;">
-                    <p class="text-sm mt-1" style="color: ${config.secondary_color || defaultConfig.secondary_color}">Kosongkan jika tidak melanjutkan</p>
-                  </div>
-
-                  <div class="mb-6">
-                    <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                      <i class="fa fa-briefcase"></i>
-                      <span>Tugas/Pekerjaan Saat Ini</span>
-                    </label>
-                    <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: Software Engineer di PT. ABC (Opsional)" style="border-color: #e5e7eb;">
-                    <p class="text-sm mt-1" style="color: ${config.secondary_color || defaultConfig.secondary_color}">Kosongkan jika tidak/belum bekerja</p>
-                  </div>
-
-                  <div class="flex gap-3">
-                    <button type="submit" class="btn-modern flex-1 py-4 px-6 font-semibold text-lg flex items-center justify-center gap-2" style="background-color: #10b981; color: #ffffff;">
-                      <i class="fa fa-paper-plane"></i>
-                      <span>Kirim Data</span>
-                    </button>
-                  </div>
-
-                  <div id="formMessage" class="mt-4 p-4 rounded-lg text-center font-semibold hidden"></div>
-                </form>
-              </div>
-            </div>
-          `;
-
-          document.getElementById('publicAlumniForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (alumniData.length >= 999) {
-              const msgEl = document.getElementById('formMessage');
-              msgEl.textContent = '❌ Maaf, kapasitas database sudah penuh (999 data)';
-              msgEl.style.backgroundColor = '#fee2e2';
-              msgEl.style.color = '#dc2626';
-              msgEl.classList.remove('hidden');
-              return;
-            }
-            
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalContent = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<div class="loading-spinner mx-auto"></div>';
-            
-            const formData = new FormData(e.target);
-            const newAlumni = {
-              id: Date.now().toString(),
-              nama: formData.get('nama'),
-              ttl: formData.get('ttl'),
-              tahun_masuk: formData.get('tahun_masuk'),
-              tahun_lulus: formData.get('tahun_lulus'),
-              jenis_kelamin: formData.get('jenis_kelamin'),
-              kelanjutan_pendidikan: formData.get('kelanjutan_pendidikan') || '-',
-              iuran_status: 'Belum Bayar',
-              tugas: formData.get('tugas') || '-',
-              created_at: new Date().toISOString()
-            };
-            
-            const result = await window.dataSdk.create(newAlumni);
-            
-            const msgEl = document.getElementById('formMessage');
-            if (result.isOk) {
-              msgEl.textContent = '✅ Data berhasil dikirim! Terima kasih telah mendaftar.';
-              msgEl.style.backgroundColor = '#d1fae5';
-              msgEl.style.color = '#065f46';
-              msgEl.classList.remove('hidden');
-              e.target.reset();
-              setTimeout(() => {
-                msgEl.classList.add('hidden');
-              }, 5000);
-            } else {
-              msgEl.textContent = '❌ Gagal mengirim data. Silakan coba lagi.';
-              msgEl.style.backgroundColor = '#fee2e2';
-              msgEl.style.color = '#dc2626';
-              msgEl.classList.remove('hidden');
-            }
-            
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalContent;
-          });
-          break;
-      }
-    }
-
-    function showAlumniForm() {
-      const config = window.elementSdk?.config || defaultConfig;
-      const modal = document.createElement('div');
-      modal.className = 'modal-backdrop fixed inset-0 flex items-center justify-center';
-      modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
-      modal.style.zIndex = '1000';
-      modal.innerHTML = `
-        <div class="rounded-2xl shadow-2xl p-8 max-w-md w-full max-h-screen overflow-y-auto" style="background-color: ${config.sidebar_color || defaultConfig.sidebar_color}">
-          <div class="text-center mb-6">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="background-color: rgba(59, 130, 246, 0.1);">
-              <i class="fa fa-user-plus text-3xl" style="color: ${config.primary_color || defaultConfig.primary_color};"></i>
-            </div>
-            <h3 class="text-2xl font-bold" style="color: ${config.text_color || defaultConfig.text_color}">Tambah Alumni</h3>
-          </div>
-          <form id="alumniForm">
-            <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                <i class="fa fa-user"></i>
-                <span>Nama</span>
-              </label>
-              <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
-            </div>
-            <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                <i class="fa fa-calendar-alt"></i>
-                <span>Tahun Masuk</span>
-              </label>
-              <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
-            </div>
-            <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                <i class="fa fa-calendar-check"></i>
-                <span>Tahun Lulus</span>
-              </label>
-              <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
-            </div>
-            <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                <i class="fa fa-venus-mars"></i>
-                <span>Jenis Kelamin</span>
-              </label>
-              <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
-                <option value="">Pilih</option>
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
-              </select>
-            </div>
-            <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                <i class="fa fa-university"></i>
-                <span>Kelanjutan Pendidikan</span>
-              </label>
-              <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" style="border-color: #e5e7eb;">
-            </div>
-            <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                <i class="fa fa-money-bill-wave"></i>
-                <span>Status Iuran</span>
-              </label>
-              <select name="iuran_status" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
-                <option value="Belum Bayar">Belum Bayar</option>
-                <option value="Lunas">Lunas</option>
-              </select>
-            </div>
-            <div class="mb-6">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: ${config.text_color || defaultConfig.text_color}">
-                <i class="fa fa-tasks"></i>
-                <span>Tugas</span>
-              </label>
-              <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" style="border-color: #e5e7eb;">
-            </div>
-            <div class="flex gap-3">
-              <button type="submit" class="btn-modern btn-primary flex-1 py-3 px-4 font-semibold flex items-center justify-center gap-2">
-                <i class="fa fa-save"></i>
-                <span>Simpan</span>
-              </button>
-              <button type="button" class="btn-modern btn-secondary flex-1 py-3 px-4 font-semibold" onclick="this.closest('.fixed').remove()">
-                <i class="fa fa-times mr-2"></i>Batal
-              </button>
-            </div>
-          </form>
-        </div>
-      `;
-      
-      document.body.appendChild(modal);
-      
-      modal.querySelector('#alumniForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        if (alumniData.length >= 999) {
-          showToast('Maksimum 999 alumni tercapai. Hapus data terlebih dahulu.');
-          return;
-        }
-        
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<div class="loading-spinner mx-auto"></div>';
-        
-        const formData = new FormData(e.target);
-        const newAlumni = {
-          id: Date.now().toString(),
-          nama: formData.get('nama'),
-          tahun_masuk: formData.get('tahun_masuk'),
-          tahun_lulus: formData.get('tahun_lulus'),
-          jenis_kelamin: formData.get('jenis_kelamin'),
-          kelanjutan_pendidikan: formData.get('kelanjutan_pendidikan') || '-',
-          iuran_status: formData.get('iuran_status'),
-          tugas: formData.get('tugas') || '-',
-          created_at: new Date().toISOString()
-        };
-        
-        const result = await window.dataSdk.create(newAlumni);
-        
-        if (result.isOk) {
-          showToast('Alumni berhasil ditambahkan');
-          modal.remove();
-        } else {
-          showToast('Gagal menambahkan alumni');
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<span>Simpan</span>';
-        }
-      });
-    }
-
-    // Initialize app
-    initApp();
+    // ========================================
+    // INITIALIZATION
+    // ========================================
+    
+    // Start listening to Firebase
+    subscribeToAlumni();
+    
+    // Load initial page
+    loadPage('beranda');
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a102cee71eafd23',t:'MTc2MzU2MDIxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1059f6513dfe09',t:'MTc2MzU2MjA1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
