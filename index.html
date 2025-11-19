@@ -269,7 +269,7 @@
      <div class="mb-8 flex justify-center"><img src="LOGO PONDOK.png" alt="Logo Alumni" style="max-width: 85px; height: auto;">
      </div>
      <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Pendidikan Terakhir</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas | Pengabdian</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pesan-masuk" id="menuPesanMasuk" style="display: none;"> <i class="fa fa-envelope"></i> <span>Pesan Masuk</span> </a>
-      <div class="border-t mt-4 pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>Form Pendaftaran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
+      <div class="border-t mt-4 pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>Form Pendataan</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
       </div>
      </nav>
     </div>
@@ -1078,7 +1078,7 @@
           msgEl.style.color = '#065f46';
           msgEl.classList.remove('hidden');
           e.target.reset();
-          showToast('✅ Data berhasil tersimpan!');
+          showToast('Data berhasil tersimpan!');
           setTimeout(() => {
             msgEl.classList.add('hidden');
           }, 5000);
@@ -1218,10 +1218,10 @@
         const result = await addAlumni(newAlumni);
         
         if (result.success) {
-          showToast('✅ Alumni berhasil ditambahkan');
+          showToast('Alumni berhasil ditambahkan');
           modal.remove();
         } else {
-          showToast('❌ Gagal menambahkan alumni', 'error');
+          showToast('Gagal menambahkan alumni', 'error');
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalContent;
         }
@@ -1269,11 +1269,11 @@
       const result = await addPesan(newPesan);
       
       if (result.success) {
-        showToast('✅ Pesan berhasil dikirim! Terima kasih atas sarannya.');
+        showToast('Pesan berhasil dikirim! Terima kasih atas sarannya.');
         e.target.reset();
         document.getElementById('chatModal').classList.remove('show');
       } else {
-        showToast('❌ Gagal mengirim pesan. Silakan coba lagi.', 'error');
+        showToast('Gagal mengirim pesan. Silakan coba lagi.', 'error');
       }
       
       submitBtn.disabled = false;
@@ -1287,7 +1287,7 @@
         isAdmin = false;
         document.getElementById('menuPesanMasuk').style.display = 'none';
         e.currentTarget.innerHTML = '<i class="fa fa-lock"></i><span>Login Admin</span>';
-        showToast('✅ Berhasil logout');
+        showToast('Berhasil logout');
         loadPage(currentPage);
       } else {
         document.getElementById('loginModal').classList.remove('hidden');
