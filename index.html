@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Pengontrolan Alumni</title>
+  <title>Alumni Pontren Jamaluddin Bagik Nyaka</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -185,6 +185,70 @@
         font-size: 10px;
       }
     }
+
+    /* Floating Chat Button */
+    .floating-chat-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: #3b82f6;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 900;
+      font-size: 20px;
+    }
+    .floating-chat-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+    }
+    .chat-modal {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      width: 350px;
+      max-width: calc(100vw - 48px);
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      z-index: 950;
+      display: none;
+      animation: slideUp 0.3s ease-out;
+    }
+    .chat-modal.show {
+      display: block;
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (max-width: 768px) {
+      .floating-chat-btn {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 18px;
+      }
+      .chat-modal {
+        bottom: 80px;
+        right: 20px;
+        width: calc(100vw - 40px);
+      }
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -204,8 +268,8 @@
     <div class="p-6">
      <div class="mb-8 flex justify-center"><img src="LOGO PONDOK.png" alt="Logo Alumni" style="max-width: 160px; height: auto;">
      </div>
-     <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Pendidikan Terakhir</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas | Pengabdian</span> </a>
-      <div class="border-t mt-4 pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>Form Pendataan</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
+     <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Pendidikan Terakhir</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas | Pengabdian</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pesan-masuk" id="menuPesanMasuk" style="display: none;"> <i class="fa fa-envelope"></i> <span>Pesan Masuk</span> </a>
+      <div class="border-t mt-4 pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>Form Pendaftaran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
       </div>
      </nav>
     </div>
@@ -214,9 +278,26 @@
     <div class="p-8 flex-1" id="mainContent"><!-- Content will be loaded here -->
     </div>
     <footer class="text-center py-6 px-4" style="background-color: #ffffff; border-top: 2px solid #e5e7eb; margin-top: auto;">
-     <p class="font-bold text-lg mb-2" style="color: #1f2937;">Alumni Pontren Jamaluddin Bagik Nyaka</p>
-     <p class="text-sm" style="color: #6b7280;">Created by <a href="https://www.instagram.com/muzanni.uce/" target="_blank" rel="noopener noreferrer" class="font-semibold hover:underline" style="color: #3b82f6; cursor: pointer;">Muzanni</a></p>
+     <p class="font-bold text-sm mb-2" style="color: #1f2937;">Alumni Pontren Jamaluddin Bagik Nyaka</p>
+     <p class="text-xs" style="color: #6b7280;">Created by <a href="https://www.instagram.com/muzanni.uce/" target="_blank" rel="noopener noreferrer" class="font-semibold hover:underline" style="color: #3b82f6; cursor: pointer;">Muzanni</a></p>
     </footer>
+   </div>
+  </div><!-- Floating Chat Button -->
+  <div class="floating-chat-btn" id="floatingChatBtn"><i class="fa fa-comment-dots"></i>
+  </div><!-- Chat Modal -->
+  <div class="chat-modal" id="chatModal">
+   <div class="p-5">
+    <div class="flex items-center justify-between mb-4">
+     <h3 class="font-bold text-lg" style="color: #1f2937;"><i class="fa fa-paper-plane mr-2" style="color: #3b82f6;"></i>Kirim Saran</h3><button id="closeChatModal" class="text-2xl" style="color: #6b7280; cursor: pointer;"> <i class="fa fa-times"></i> </button>
+    </div>
+    <form id="chatForm">
+     <div class="mb-3"><label class="block mb-2 font-semibold text-sm" style="color: #1f2937;">Nama Anda</label> <input type="text" name="nama" class="w-full px-3 py-2 border-2 rounded-lg focus:outline-none text-sm" placeholder="Masukkan nama lengkap" required style="border-color: #e5e7eb;">
+     </div>
+     <div class="mb-3"><label class="block mb-2 font-semibold text-sm" style="color: #1f2937;">Alumni Tahun</label> <input type="text" name="tahun" class="w-full px-3 py-2 border-2 rounded-lg focus:outline-none text-sm" placeholder="Contoh: 2021" required style="border-color: #e5e7eb;">
+     </div>
+     <div class="mb-4"><label class="block mb-2 font-semibold text-sm" style="color: #1f2937;">Isi Pesan (Saran)</label> <textarea name="pesan" rows="4" class="w-full px-3 py-2 border-2 rounded-lg focus:outline-none text-sm resize-none" placeholder="Tuliskan saran Anda..." required style="border-color: #e5e7eb;"></textarea>
+     </div><button type="submit" class="btn-modern w-full py-2 font-semibold text-sm flex items-center justify-center gap-2" style="background-color: #3b82f6; color: #ffffff;"> <i class="fa fa-paper-plane"></i> <span>Kirim Pesan</span> </button>
+    </form>
    </div>
   </div><!-- Login Modal -->
   <div id="loginModal" class="modal-backdrop fixed inset-0 flex items-center justify-center hidden" style="background-color: rgba(0,0,0,0.6); z-index: 1000;">
@@ -225,7 +306,7 @@
      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4" style="background-color: rgba(59, 130, 246, 0.1);"><i class="fa fa-lock text-4xl" style="color: #3b82f6;"></i>
      </div>
      <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;">Login Admin</h2>
-     <p class="text-sm" style="color: #6b7280;">Login Khusus Admin</p>
+     <p class="text-sm" style="color: #6b7280;">Form Login Khusus Admin</p>
     </div>
     <form id="loginForm">
      <div class="mb-5"><label for="username" class="block mb-2 font-semibold text-sm" style="color: #374151;"> <i class="fa fa-user mr-2" style="color: #3b82f6;"></i> Username </label> <input type="text" id="username" class="w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all" placeholder="Masukkan username" required style="border-color: #e5e7eb; background-color: #f9fafb;" onfocus="this.style.borderColor='#3b82f6'; this.style.backgroundColor='#ffffff';" onblur="this.style.borderColor='#e5e7eb'; this.style.backgroundColor='#f9fafb';">
@@ -256,14 +337,17 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const alumniCollection = db.collection('alumni');
+    const pesanCollection = db.collection('pesan');
 
     // ========================================
     // STATE MANAGEMENT
     // ========================================
     let alumniData = [];
+    let pesanData = [];
     let isAdmin = false;
     let currentPage = 'beranda';
     let unsubscribe = null;
+    let unsubscribePesan = null;
 
     // ========================================
     // MOBILE MENU FUNCTIONS
@@ -352,6 +436,52 @@
       }
     }
 
+    // Real-time listener untuk pesan masuk
+    function subscribeToPesan() {
+      unsubscribePesan = pesanCollection.onSnapshot((snapshot) => {
+        pesanData = [];
+        snapshot.forEach((doc) => {
+          pesanData.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        // Sort by created_at descending
+        pesanData.sort((a, b) => {
+          const dateA = a.created_at ? new Date(a.created_at) : new Date(0);
+          const dateB = b.created_at ? new Date(b.created_at) : new Date(0);
+          return dateB - dateA;
+        });
+        if (currentPage === 'pesan-masuk') {
+          loadPage('pesan-masuk');
+        }
+      }, (error) => {
+        console.error("Error fetching pesan:", error);
+      });
+    }
+
+    // Tambah pesan baru
+    async function addPesan(pesanObj) {
+      try {
+        await pesanCollection.add(pesanObj);
+        return { success: true };
+      } catch (error) {
+        console.error("Error adding pesan:", error);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // Hapus pesan
+    async function deletePesan(id) {
+      try {
+        await pesanCollection.doc(id).delete();
+        return { success: true };
+      } catch (error) {
+        console.error("Error deleting pesan:", error);
+        return { success: false, error: error.message };
+      }
+    }
+
     // ========================================
     // UI FUNCTIONS
     // ========================================
@@ -411,6 +541,9 @@
         case 'tugas':
           renderTugas(content);
           break;
+        case 'pesan-masuk':
+          renderPesanMasuk(content);
+          break;
         case 'form-daftar':
           renderFormDaftar(content);
           break;
@@ -440,7 +573,7 @@
             <div class="stat-card p-6">
               <div class="flex items-center justify-between">
                 <div>
-                  <div class="text-sm font-medium mb-2" style="color: #6b7280;">Pendidikan Terakhir</div>
+                  <div class="text-sm font-medium mb-2" style="color: #6b7280;">Melanjutkan Pendidikan</div>
                   <div class="text-4xl font-bold" style="color: #3b82f6;">${melanjutkanPendidikan}</div>
                 </div>
                 <div class="text-5xl" style="color: #3b82f6; opacity: 0.2;">
@@ -611,7 +744,7 @@
 
       let html = `
         <div class="content-card">
-          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Status Iuran</h2>
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;"></h2>
           <div class="table-modern overflow-x-auto">
             <table class="w-full">
               <thead style="background-color: #3b82f6; color: #ffffff;">
@@ -752,6 +885,80 @@
       content.innerHTML = html;
     }
 
+    function renderPesanMasuk(content) {
+      let html = `
+        <div class="content-card">
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Pesan Masuk dari Alumni</h2>
+          <div class="space-y-4">
+      `;
+      
+      if (pesanData.length === 0) {
+        html += `
+          <div class="text-center py-16" style="color: #6b7280;">
+            <i class="fa fa-inbox text-5xl mb-4" style="display: block;"></i>
+            <p class="text-lg">Belum ada pesan masuk</p>
+          </div>
+        `;
+      } else {
+        pesanData.forEach((pesan) => {
+          const tanggal = pesan.created_at ? new Date(pesan.created_at).toLocaleString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) : '-';
+          
+          html += `
+            <div class="stat-card p-5">
+              <div class="flex justify-between items-start mb-3">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <h3 class="font-bold text-base" style="color: #1f2937;">${pesan.nama}</h3>
+                    <span class="px-2 py-1 rounded text-xs font-semibold" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">Alumni ${pesan.tahun}</span>
+                  </div>
+                  <p class="text-xs" style="color: #6b7280;"><i class="fa fa-clock mr-1"></i>${tanggal}</p>
+                </div>
+                <button class="deletePesanBtn text-sm px-3 py-1 rounded-lg" style="background-color: #fee2e2; color: #dc2626; cursor: pointer;" data-id="${pesan.id}">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+              <div class="p-3 rounded-lg text-sm" style="background-color: #f9fafb; color: #1f2937;">
+                ${pesan.pesan}
+              </div>
+            </div>
+          `;
+        });
+      }
+      
+      html += `
+          </div>
+        </div>
+      `;
+      
+      content.innerHTML = html;
+      
+      document.querySelectorAll('.deletePesanBtn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const button = e.currentTarget;
+          const id = button.getAttribute('data-id');
+          
+          button.disabled = true;
+          button.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+          
+          const result = await deletePesan(id);
+          
+          if (result.success) {
+            showToast('Pesan berhasil dihapus');
+          } else {
+            showToast('Gagal menghapus pesan', 'error');
+            button.disabled = false;
+            button.innerHTML = '<i class="fa fa-trash"></i>';
+          }
+        });
+      });
+    }
+
     function renderFormDaftar(content) {
       content.innerHTML = `
         <div class="content-card max-w-3xl mx-auto">
@@ -767,7 +974,6 @@
             <form id="publicAlumniForm">
               <div class="mb-5">
                 <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                  <i class="fa fa-user"></i>
                   <span>Nama Lengkap</span>
                   <span style="color: #ef4444;">*</span>
                 </label>
@@ -776,17 +982,15 @@
 
               <div class="mb-5">
                 <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                  <i class="fa fa-birthday-cake"></i>
                   <span>Tempat, Tanggal Lahir</span>
                   <span style="color: #ef4444;">*</span>
                 </label>
-                <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: Jakarta, 15 Agustus 2000" required style="border-color: #e5e7eb;">
+                <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: Aikmel, 15 Agustus 2000" required style="border-color: #e5e7eb;">
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div>
                   <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                    <i class="fa fa-calendar-alt"></i>
                     <span>Tahun Masuk</span>
                     <span style="color: #ef4444;">*</span>
                   </label>
@@ -795,7 +999,6 @@
 
                 <div>
                   <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                    <i class="fa fa-calendar-check"></i>
                     <span>Tahun Lulus</span>
                     <span style="color: #ef4444;">*</span>
                   </label>
@@ -805,7 +1008,6 @@
 
               <div class="mb-5">
                 <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                  <i class="fa fa-venus-mars"></i>
                   <span>Jenis Kelamin</span>
                   <span style="color: #ef4444;">*</span>
                 </label>
@@ -818,7 +1020,6 @@
 
               <div class="mb-5">
                 <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                  <i class="fa fa-university"></i>
                   <span>Kelanjutan Pendidikan</span>
                 </label>
                 <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: S1 Universitas Indonesia (Opsional)" style="border-color: #e5e7eb;">
@@ -827,10 +1028,9 @@
 
               <div class="mb-6">
                 <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
-                  <i class="fa fa-briefcase"></i>
                   <span>Tugas/Pekerjaan Saat Ini</span>
                 </label>
-                <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: Software Engineer di PT. ABC (Opsional)" style="border-color: #e5e7eb;">
+                <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: Mengajar di Pontren Jamaluddin (Opsional)" style="border-color: #e5e7eb;">
                 <p class="text-xs md:text-sm mt-1" style="color: #6b7280;">Kosongkan jika tidak/belum bekerja</p>
               </div>
 
@@ -1018,10 +1218,10 @@
         const result = await addAlumni(newAlumni);
         
         if (result.success) {
-          showToast('Alumni berhasil ditambahkan');
+          showToast('✅ Alumni berhasil ditambahkan');
           modal.remove();
         } else {
-          showToast('Gagal menambahkan alumni', 'error');
+          showToast('❌ Gagal menambahkan alumni', 'error');
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalContent;
         }
@@ -1041,13 +1241,53 @@
       });
     });
 
+    // Floating Chat Button
+    document.getElementById('floatingChatBtn').addEventListener('click', () => {
+      document.getElementById('chatModal').classList.toggle('show');
+    });
+
+    document.getElementById('closeChatModal').addEventListener('click', () => {
+      document.getElementById('chatModal').classList.remove('show');
+    });
+
+    document.getElementById('chatForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalContent = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>Mengirim...';
+      
+      const formData = new FormData(e.target);
+      const newPesan = {
+        nama: formData.get('nama'),
+        tahun: formData.get('tahun'),
+        pesan: formData.get('pesan'),
+        created_at: new Date().toISOString()
+      };
+      
+      const result = await addPesan(newPesan);
+      
+      if (result.success) {
+        showToast('✅ Pesan berhasil dikirim! Terima kasih atas sarannya.');
+        e.target.reset();
+        document.getElementById('chatModal').classList.remove('show');
+      } else {
+        showToast('❌ Gagal mengirim pesan. Silakan coba lagi.', 'error');
+      }
+      
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalContent;
+    });
+
     // Login
     document.getElementById('loginBtn').addEventListener('click', (e) => {
       e.preventDefault();
       if (isAdmin) {
         isAdmin = false;
+        document.getElementById('menuPesanMasuk').style.display = 'none';
         e.currentTarget.innerHTML = '<i class="fa fa-lock"></i><span>Login Admin</span>';
-        showToast('Berhasil logout');
+        showToast('✅ Berhasil logout');
         loadPage(currentPage);
       } else {
         document.getElementById('loginModal').classList.remove('hidden');
@@ -1067,6 +1307,7 @@
       
       if (username === 'admin' && password === 'admin') {
         isAdmin = true;
+        document.getElementById('menuPesanMasuk').style.display = 'flex';
         document.getElementById('loginBtn').innerHTML = '<i class="fa fa-sign-out-alt"></i><span>Logout</span>';
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('loginError').classList.add('hidden');
@@ -1086,9 +1327,10 @@
     
     // Start listening to Firebase
     subscribeToAlumni();
+    subscribeToPesan();
     
     // Load initial page
     loadPage('beranda');
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1091fe8050fd3c',t:'MTc2MzU2NDM1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a10bed7224cfd0a',t:'MTc2MzU2NjE5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
