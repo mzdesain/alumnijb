@@ -202,20 +202,20 @@
   <div id="app" class="flex h-full"><!-- Sidebar -->
    <div class="sidebar w-64 shadow-lg" id="sidebar">
     <div class="p-6">
-     <div class="mb-8 flex justify-center"><img src="LOGO PONDOK.png" alt="Logo Alumni" style="max-width: 160px; height: auto;">
+     <div class="mb-8 flex justify-center"><img src="LINK_LOGO_GITHUB_ANDA_DI_SINI" alt="Logo Alumni" style="max-width: 160px; height: auto;">
      </div>
-     <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Kelanjutan Pendidikan</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas/Pengabdian</span> </a>
-      <div class="border-t mt-4 pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>📝 Form Pendaftaran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
+     <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Pendidikan Terakhir</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas | Pengabdian</span> </a>
+      <div class="border-t mt-4 pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>Form Pendataan</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
       </div>
      </nav>
     </div>
    </div><!-- Main Content -->
-   <div class="flex-1 overflow-y-auto content-wrapper">
-    <div class="p-8" id="mainContent"><!-- Content will be loaded here -->
+   <div class="flex-1 overflow-y-auto content-wrapper" style="display: flex; flex-direction: column; min-height: 100%;">
+    <div class="p-8 flex-1" id="mainContent"><!-- Content will be loaded here -->
     </div>
-    <footer class="text-center py-6 px-4" style="background-color: #ffffff; border-top: 2px solid #e5e7eb; margin-top: 40px;">
+    <footer class="text-center py-6 px-4" style="background-color: #ffffff; border-top: 2px solid #e5e7eb; margin-top: auto;">
      <p class="font-bold text-lg mb-2" style="color: #1f2937;">Alumni Pontren Jamaluddin Bagik Nyaka</p>
-     <p class="text-sm" style="color: #6b7280;">Created by <span class="font-semibold" style="color: #3b82f6;">Muzanni</span></p>
+     <p class="text-sm" style="color: #6b7280;">Created by <a href="https://www.instagram.com/muzanni.uce/" target="_blank" rel="noopener noreferrer" class="font-semibold hover:underline" style="color: #3b82f6; cursor: pointer;">Muzanni</a></p>
     </footer>
    </div>
   </div><!-- Login Modal -->
@@ -225,7 +225,7 @@
      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4" style="background-color: rgba(59, 130, 246, 0.1);"><i class="fa fa-lock text-4xl" style="color: #3b82f6;"></i>
      </div>
      <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;">Login Admin</h2>
-     <p class="text-sm" style="color: #6b7280;">Masukkan kredensial admin Anda</p>
+     <p class="text-sm" style="color: #6b7280;">Login Khusus Admin</p>
     </div>
     <form id="loginForm">
      <div class="mb-5"><label for="username" class="block mb-2 font-semibold text-sm" style="color: #374151;"> <i class="fa fa-user mr-2" style="color: #3b82f6;"></i> Username </label> <input type="text" id="username" class="w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all" placeholder="Masukkan username" required style="border-color: #e5e7eb; background-color: #f9fafb;" onfocus="this.style.borderColor='#3b82f6'; this.style.backgroundColor='#ffffff';" onblur="this.style.borderColor='#e5e7eb'; this.style.backgroundColor='#f9fafb';">
@@ -315,7 +315,7 @@
         loadPage(currentPage);
       }, (error) => {
         console.error("Error fetching alumni:", error);
-        showToast('❌ Gagal memuat data dari Firebase', 'error');
+        showToast('Gagal memuat data dari Firebase', 'error');
       });
     }
 
@@ -440,7 +440,7 @@
             <div class="stat-card p-6">
               <div class="flex items-center justify-between">
                 <div>
-                  <div class="text-sm font-medium mb-2" style="color: #6b7280;">Melanjutkan Pendidikan</div>
+                  <div class="text-sm font-medium mb-2" style="color: #6b7280;">Pendidikan Terakhir</div>
                   <div class="text-4xl font-bold" style="color: #3b82f6;">${melanjutkanPendidikan}</div>
                 </div>
                 <div class="text-5xl" style="color: #3b82f6; opacity: 0.2;">
@@ -498,7 +498,7 @@
         alumniData.forEach((alumni) => {
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.nama}</td>
               <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.jenis_kelamin || '-'}</td>
               <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.tahun_masuk}</td>
               <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.tahun_lulus}</td>
@@ -534,9 +534,9 @@
             const result = await deleteAlumni(id);
             
             if (result.success) {
-              showToast('✅ Alumni berhasil dihapus');
+              showToast('Alumni berhasil dihapus');
             } else {
-              showToast('❌ Gagal menghapus alumni', 'error');
+              showToast('Gagal menghapus alumni', 'error');
               button.disabled = false;
               button.innerHTML = '<i class="fa fa-trash mr-1"></i>Hapus';
             }
@@ -548,13 +548,13 @@
     function renderPendidikan(content) {
       let html = `
         <div class="content-card">
-          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Kelanjutan Pendidikan</h2>
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Pendidikan Terakhir</h2>
           <div class="table-modern overflow-x-auto">
             <table class="w-full">
               <thead style="background-color: #3b82f6; color: #ffffff;">
                 <tr>
                   <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Nama</th>
-                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Kelanjutan Pendidikan</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Pendidikan Terakhir</th>
                 </tr>
               </thead>
               <tbody>
@@ -573,8 +573,8 @@
         alumniData.forEach((alumni) => {
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
-              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-university mr-2" style="color: #6b7280;"></i>${alumni.kelanjutan_pendidikan || '-'}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.kelanjutan_pendidikan || '-'}</td>
             </tr>
           `;
         });
@@ -641,7 +641,7 @@
           
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.nama}</td>
               <td class="px-4 md:px-6 py-4"><span class="px-3 py-2 rounded-lg text-white text-xs md:text-sm font-semibold inline-flex items-center gap-2" style="background-color: ${statusColor};"><i class="fa ${statusIcon}"></i>${alumni.iuran_status || 'Belum Bayar'}</span></td>
               <td class="px-4 md:px-6 py-4 text-center"><input type="checkbox" class="iuran-checkbox w-5 h-5 cursor-pointer" data-id="${alumni.id}" ${isChecked} style="accent-color: #10b981;"></td>
             </tr>
@@ -670,9 +670,9 @@
           });
           
           if (result.success) {
-            showToast(checked ? '✅ Status diubah menjadi Lunas' : '❌ Status diubah menjadi Belum Bayar');
+            showToast(checked ? 'Status diubah menjadi Lunas' : 'Status diubah menjadi Belum Bayar');
           } else {
-            showToast('❌ Gagal mengubah status', 'error');
+            showToast('Gagal mengubah status', 'error');
             e.currentTarget.checked = !checked;
           }
           
@@ -735,8 +735,8 @@
         alumniData.forEach((alumni) => {
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
-              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-clipboard-list mr-2" style="color: #6b7280;"></i>${alumni.tugas || '-'}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.tugas || '-'}</td>
             </tr>
           `;
         });
@@ -759,7 +759,7 @@
             <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4" style="background-color: rgba(16, 185, 129, 0.1);">
               <i class="fa fa-user-plus text-4xl" style="color: #10b981;"></i>
             </div>
-            <h2 class="text-2xl md:text-3xl font-bold mb-2" style="color: #1f2937;">Form Pendaftaran Alumni</h2>
+            <h2 class="text-2xl md:text-3xl font-bold mb-2" style="color: #1f2937;">Form Pendataan Alumni</h2>
             <p style="color: #6b7280;">Silakan isi data Anda dengan lengkap dan benar</p>
           </div>
           
@@ -1018,10 +1018,10 @@
         const result = await addAlumni(newAlumni);
         
         if (result.success) {
-          showToast('✅ Alumni berhasil ditambahkan');
+          showToast('Alumni berhasil ditambahkan');
           modal.remove();
         } else {
-          showToast('❌ Gagal menambahkan alumni', 'error');
+          showToast('Gagal menambahkan alumni', 'error');
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalContent;
         }
@@ -1047,7 +1047,7 @@
       if (isAdmin) {
         isAdmin = false;
         e.currentTarget.innerHTML = '<i class="fa fa-lock"></i><span>Login Admin</span>';
-        showToast('✅ Berhasil logout');
+        showToast('Berhasil logout');
         loadPage(currentPage);
       } else {
         document.getElementById('loginModal').classList.remove('hidden');
@@ -1071,7 +1071,7 @@
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('loginError').classList.add('hidden');
         document.getElementById('loginForm').reset();
-        showToast('✅ Login berhasil! 🎉');
+        showToast('Login berhasil!');
         loadPage(currentPage);
       } else {
         const errorEl = document.getElementById('loginError');
@@ -1090,5 +1090,5 @@
     // Load initial page
     loadPage('beranda');
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1084a3d636fdc7',t:'MTc2MzU2MzgwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1091fe8050fd3c',t:'MTc2MzU2NDM1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
