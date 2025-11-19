@@ -84,29 +84,139 @@
     .modal-backdrop {
       backdrop-filter: blur(4px);
     }
+    .logo-placeholder {
+      width: 48px;
+      height: 48px;
+      background-color: #f0f4f8;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b82f6;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.2;
+      padding: 4px;
+      border: 2px dashed #3b82f6;
+    }
+
+    /* Mobile Responsive Styles */
+    .mobile-header {
+      display: none;
+      background-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .hamburger {
+      width: 30px;
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      height: 3px;
+      background-color: #3b82f6;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(10px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-11px) rotate(-45deg);
+    }
+    
+    @media (max-width: 768px) {
+      .mobile-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100%;
+        z-index: 200;
+        width: 280px;
+        overflow-y: auto;
+      }
+      .sidebar.open {
+        left: 0;
+      }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 150;
+      }
+      .sidebar-overlay.show {
+        display: block;
+      }
+      #app {
+        display: block;
+      }
+      .content-wrapper {
+        width: 100%;
+      }
+      .table-modern {
+        overflow-x: auto;
+      }
+      .stat-card {
+        margin-bottom: 16px;
+      }
+      .mobile-header .logo-placeholder {
+        width: 40px;
+        height: 40px;
+        font-size: 10px;
+      }
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
- <body>
+ <body><!-- Mobile Header with Hamburger -->
+  <div class="mobile-header">
+   <div class="hamburger" id="hamburgerBtn"><span></span> <span></span> <span></span>
+   </div>
+   <div class="flex items-center gap-3">
+    <h1 class="text-lg font-bold" style="color: #1f2937;">Sistem Alumni</h1>
+   </div>
+  </div><!-- Sidebar Overlay (Mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div id="app" class="flex h-full"><!-- Sidebar -->
    <div class="sidebar w-64 shadow-lg" id="sidebar">
     <div class="p-6">
-     <div class="flex items-center gap-3 mb-8"><i class="fa fa-graduation-cap text-3xl" style="color: #3b82f6;"></i>
-      <h1 class="text-xl font-bold" style="color: #1f2937;">Sistem Pengontrolan Alumni</h1>
+     <div class="mb-8 flex justify-center"><img src="LINK_LOGO_GITHUB_ANDA_DI_SINI" alt="Logo Alumni" style="max-width: 160px; height: auto;">
      </div>
      <nav><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="beranda"> <i class="fa fa-chart-line"></i> <span>Beranda</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="alumni"> <i class="fa fa-users"></i> <span>Alumni</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="pendidikan"> <i class="fa fa-user-graduate"></i> <span>Kelanjutan Pendidikan</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="iuran"> <i class="fa fa-money-bill-wave"></i> <span>Iuran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="whatsapp"> <i class="fab fa-whatsapp"></i> <span>Group WhatsApp</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="tugas"> <i class="fa fa-tasks"></i> <span>Tugas/Pengabdian</span> </a>
-      <div class="border-t mt-4 pt-4 mb-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>📝 Form Pendaftaran</span> </a>
-      </div>
-      <div class="border-t pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
+      <div class="border-t mt-4 pt-4"><a href="#" class="menu-item py-3 px-4 rounded-lg mb-2" data-page="form-daftar" style="background-color: rgba(16, 185, 129, 0.1);"> <i class="fa fa-edit"></i> <span>📝 Form Pendaftaran</span> </a> <a href="#" class="menu-item py-3 px-4 rounded-lg" id="loginBtn"> <i class="fa fa-lock"></i> <span>Login Admin</span> </a>
       </div>
      </nav>
     </div>
    </div><!-- Main Content -->
-   <div class="flex-1 overflow-y-auto">
+   <div class="flex-1 overflow-y-auto content-wrapper">
     <div class="p-8" id="mainContent"><!-- Content will be loaded here -->
     </div>
+    <footer class="text-center py-6 px-4" style="background-color: #ffffff; border-top: 2px solid #e5e7eb; margin-top: 40px;">
+     <p class="font-bold text-lg mb-2" style="color: #1f2937;">Alumni Pontren Jamaluddin Bagik Nyaka</p>
+     <p class="text-sm" style="color: #6b7280;">Created by <span class="font-semibold" style="color: #3b82f6;">Muzanni</span></p>
+    </footer>
    </div>
   </div><!-- Login Modal -->
   <div id="loginModal" class="modal-backdrop fixed inset-0 flex items-center justify-center hidden" style="background-color: rgba(0,0,0,0.6); z-index: 1000;">
@@ -154,6 +264,33 @@
     let isAdmin = false;
     let currentPage = 'beranda';
     let unsubscribe = null;
+
+    // ========================================
+    // MOBILE MENU FUNCTIONS
+    // ========================================
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('show');
+      hamburgerBtn.classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('show');
+      hamburgerBtn.classList.remove('active');
+    }
+
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', toggleSidebar);
+    }
+
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', closeSidebar);
+    }
 
     // ========================================
     // FIREBASE FUNCTIONS
@@ -253,6 +390,7 @@
       currentPage = page;
       const content = document.getElementById('mainContent');
       setActiveMenu(page);
+      closeSidebar(); // Close sidebar on mobile when page changes
       
       switch(page) {
         case 'beranda':
@@ -329,19 +467,19 @@
     function renderAlumni(content) {
       let html = `
         <div class="content-card">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-3xl font-bold" style="color: #1f2937;">Data Alumni</h2>
-            ${isAdmin ? '<button id="addAlumniBtn" class="btn-modern px-6 py-3" style="background-color: #3b82f6; color: #ffffff;"><i class="fa fa-user-plus mr-2"></i>Tambah Alumni</button>' : ''}
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <h2 class="text-2xl md:text-3xl font-bold" style="color: #1f2937;">Data Alumni</h2>
+            ${isAdmin ? '<button id="addAlumniBtn" class="btn-modern px-6 py-3 w-full md:w-auto" style="background-color: #3b82f6; color: #ffffff;"><i class="fa fa-user-plus mr-2"></i>Tambah Alumni</button>' : ''}
           </div>
-          <div class="table-modern">
+          <div class="table-modern overflow-x-auto">
             <table class="w-full">
               <thead style="background-color: #3b82f6; color: #ffffff;">
                 <tr>
-                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                  <th class="px-6 py-4 text-left font-semibold">Jenis Kelamin</th>
-                  <th class="px-6 py-4 text-left font-semibold">Tahun Masuk</th>
-                  <th class="px-6 py-4 text-left font-semibold">Tahun Lulus</th>
-                  ${isAdmin ? '<th class="px-6 py-4 text-left font-semibold">Aksi</th>' : ''}
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Nama</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Jenis Kelamin</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Tahun Masuk</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Tahun Lulus</th>
+                  ${isAdmin ? '<th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Aksi</th>' : ''}
                 </tr>
               </thead>
               <tbody>
@@ -360,11 +498,11 @@
         alumniData.forEach((alumni) => {
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
-              <td class="px-6 py-4" style="color: #1f2937;">${alumni.jenis_kelamin || '-'}</td>
-              <td class="px-6 py-4" style="color: #1f2937;">${alumni.tahun_masuk}</td>
-              <td class="px-6 py-4" style="color: #1f2937;">${alumni.tahun_lulus}</td>
-              ${isAdmin ? `<td class="px-6 py-4"><button class="deleteAlumniBtn btn-modern px-4 py-2 text-sm" style="background-color: #ef4444; color: #ffffff;" data-id="${alumni.id}"><i class="fa fa-trash mr-1"></i>Hapus</button></td>` : ''}
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.jenis_kelamin || '-'}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.tahun_masuk}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;">${alumni.tahun_lulus}</td>
+              ${isAdmin ? `<td class="px-4 md:px-6 py-4"><button class="deleteAlumniBtn btn-modern px-3 py-2 text-xs md:text-sm" style="background-color: #ef4444; color: #ffffff;" data-id="${alumni.id}"><i class="fa fa-trash mr-1"></i>Hapus</button></td>` : ''}
             </tr>
           `;
         });
@@ -410,13 +548,13 @@
     function renderPendidikan(content) {
       let html = `
         <div class="content-card">
-          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Kelanjutan Pendidikan</h2>
-          <div class="table-modern">
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Kelanjutan Pendidikan</h2>
+          <div class="table-modern overflow-x-auto">
             <table class="w-full">
               <thead style="background-color: #3b82f6; color: #ffffff;">
                 <tr>
-                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                  <th class="px-6 py-4 text-left font-semibold">Kelanjutan Pendidikan</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Nama</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Kelanjutan Pendidikan</th>
                 </tr>
               </thead>
               <tbody>
@@ -435,8 +573,8 @@
         alumniData.forEach((alumni) => {
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
-              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-university mr-2" style="color: #6b7280;"></i>${alumni.kelanjutan_pendidikan || '-'}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-university mr-2" style="color: #6b7280;"></i>${alumni.kelanjutan_pendidikan || '-'}</td>
             </tr>
           `;
         });
@@ -453,16 +591,34 @@
     }
 
     function renderIuran(content) {
+      // Hanya alumni yang bisa lihat halaman iuran
+      if (!isAdmin) {
+        content.innerHTML = `
+          <div class="content-card text-center py-16">
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-6" style="background-color: rgba(239, 68, 68, 0.1);">
+              <i class="fa fa-lock text-5xl" style="color: #ef4444;"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-4" style="color: #1f2937;">Akses Terbatas</h2>
+            <p class="text-lg mb-6" style="color: #6b7280;">Halaman ini hanya dapat diakses oleh alumni yang sudah login sebagai admin.</p>
+            <button onclick="document.getElementById('loginBtn').click()" class="btn-modern px-8 py-3 inline-flex items-center gap-2" style="background-color: #3b82f6; color: #ffffff;">
+              <i class="fa fa-lock"></i>
+              <span>Login Admin</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
       let html = `
         <div class="content-card">
-          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Status Iuran</h2>
-          <div class="table-modern">
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Status Iuran</h2>
+          <div class="table-modern overflow-x-auto">
             <table class="w-full">
               <thead style="background-color: #3b82f6; color: #ffffff;">
                 <tr>
-                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                  <th class="px-6 py-4 text-left font-semibold">Status Iuran</th>
-                  ${isAdmin ? '<th class="px-6 py-4 text-center font-semibold">Sudah Bayar</th>' : ''}
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Nama</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Status Iuran</th>
+                  <th class="px-4 md:px-6 py-4 text-center font-semibold text-sm md:text-base">Sudah Bayar</th>
                 </tr>
               </thead>
               <tbody>
@@ -471,7 +627,7 @@
       if (alumniData.length === 0) {
         html += `
           <tr>
-            <td colspan="${isAdmin ? 3 : 2}" class="px-6 py-8 text-center" style="color: #6b7280;">
+            <td colspan="3" class="px-6 py-8 text-center" style="color: #6b7280;">
               <i class="fa fa-inbox text-4xl mb-3" style="display: block;"></i>
               Belum ada data
             </td>
@@ -485,9 +641,9 @@
           
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
-              <td class="px-6 py-4"><span class="px-4 py-2 rounded-lg text-white text-sm font-semibold inline-flex items-center gap-2" style="background-color: ${statusColor};"><i class="fa ${statusIcon}"></i>${alumni.iuran_status || 'Belum Bayar'}</span></td>
-              ${isAdmin ? `<td class="px-6 py-4 text-center"><input type="checkbox" class="iuran-checkbox w-5 h-5 cursor-pointer" data-id="${alumni.id}" ${isChecked} style="accent-color: #10b981;"></td>` : ''}
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4"><span class="px-3 py-2 rounded-lg text-white text-xs md:text-sm font-semibold inline-flex items-center gap-2" style="background-color: ${statusColor};"><i class="fa ${statusIcon}"></i>${alumni.iuran_status || 'Belum Bayar'}</span></td>
+              <td class="px-4 md:px-6 py-4 text-center"><input type="checkbox" class="iuran-checkbox w-5 h-5 cursor-pointer" data-id="${alumni.id}" ${isChecked} style="accent-color: #10b981;"></td>
             </tr>
           `;
         });
@@ -502,35 +658,33 @@
       
       content.innerHTML = html;
       
-      if (isAdmin) {
-        document.querySelectorAll('.iuran-checkbox').forEach(checkbox => {
-          checkbox.addEventListener('change', async (e) => {
-            const id = e.currentTarget.getAttribute('data-id');
-            const checked = e.currentTarget.checked;
-            
-            e.currentTarget.disabled = true;
-            
-            const result = await updateAlumni(id, {
-              iuran_status: checked ? 'Lunas' : 'Belum Bayar'
-            });
-            
-            if (result.success) {
-              showToast(checked ? '✅ Status diubah menjadi Lunas' : '❌ Status diubah menjadi Belum Bayar');
-            } else {
-              showToast('❌ Gagal mengubah status', 'error');
-              e.currentTarget.checked = !checked;
-            }
-            
-            e.currentTarget.disabled = false;
+      document.querySelectorAll('.iuran-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          const checked = e.currentTarget.checked;
+          
+          e.currentTarget.disabled = true;
+          
+          const result = await updateAlumni(id, {
+            iuran_status: checked ? 'Lunas' : 'Belum Bayar'
           });
+          
+          if (result.success) {
+            showToast(checked ? '✅ Status diubah menjadi Lunas' : '❌ Status diubah menjadi Belum Bayar');
+          } else {
+            showToast('❌ Gagal mengubah status', 'error');
+            e.currentTarget.checked = !checked;
+          }
+          
+          e.currentTarget.disabled = false;
         });
-      }
+      });
     }
 
     function renderWhatsApp(content) {
       content.innerHTML = `
         <div class="content-card">
-          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Group WhatsApp</h2>
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Group WhatsApp</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="stat-card p-8 text-center">
               <div class="text-6xl mb-4" style="color: #25D366;">
@@ -556,13 +710,13 @@
     function renderTugas(content) {
       let html = `
         <div class="content-card">
-          <h2 class="text-3xl font-bold mb-6" style="color: #1f2937;">Tugas/Pengabdian</h2>
-          <div class="table-modern">
+          <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color: #1f2937;">Tugas/Pengabdian</h2>
+          <div class="table-modern overflow-x-auto">
             <table class="w-full">
               <thead style="background-color: #3b82f6; color: #ffffff;">
                 <tr>
-                  <th class="px-6 py-4 text-left font-semibold">Nama</th>
-                  <th class="px-6 py-4 text-left font-semibold">Tugas</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Nama</th>
+                  <th class="px-4 md:px-6 py-4 text-left font-semibold text-sm md:text-base">Tugas</th>
                 </tr>
               </thead>
               <tbody>
@@ -581,8 +735,8 @@
         alumniData.forEach((alumni) => {
           html += `
             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
-              <td class="px-6 py-4" style="color: #1f2937;"><i class="fa fa-clipboard-list mr-2" style="color: #6b7280;"></i>${alumni.tugas || '-'}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-user mr-2" style="color: #6b7280;"></i>${alumni.nama}</td>
+              <td class="px-4 md:px-6 py-4 text-sm md:text-base" style="color: #1f2937;"><i class="fa fa-clipboard-list mr-2" style="color: #6b7280;"></i>${alumni.tugas || '-'}</td>
             </tr>
           `;
         });
@@ -605,57 +759,57 @@
             <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4" style="background-color: rgba(16, 185, 129, 0.1);">
               <i class="fa fa-user-plus text-4xl" style="color: #10b981;"></i>
             </div>
-            <h2 class="text-3xl font-bold mb-2" style="color: #1f2937;">Form Pendaftaran Alumni</h2>
+            <h2 class="text-2xl md:text-3xl font-bold mb-2" style="color: #1f2937;">Form Pendaftaran Alumni</h2>
             <p style="color: #6b7280;">Silakan isi data Anda dengan lengkap dan benar</p>
           </div>
           
-          <div class="stat-card p-8">
+          <div class="stat-card p-6 md:p-8">
             <form id="publicAlumniForm">
               <div class="mb-5">
-                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                   <i class="fa fa-user"></i>
                   <span>Nama Lengkap</span>
                   <span style="color: #ef4444;">*</span>
                 </label>
-                <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Masukkan nama lengkap" required style="border-color: #e5e7eb;">
+                <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Masukkan nama lengkap" required style="border-color: #e5e7eb;">
               </div>
 
               <div class="mb-5">
-                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                   <i class="fa fa-birthday-cake"></i>
                   <span>Tempat, Tanggal Lahir</span>
                   <span style="color: #ef4444;">*</span>
                 </label>
-                <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: Jakarta, 15 Agustus 2000" required style="border-color: #e5e7eb;">
+                <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: Jakarta, 15 Agustus 2000" required style="border-color: #e5e7eb;">
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div>
-                  <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                  <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                     <i class="fa fa-calendar-alt"></i>
                     <span>Tahun Masuk</span>
                     <span style="color: #ef4444;">*</span>
                   </label>
-                  <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: 2018" required style="border-color: #e5e7eb;">
+                  <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: 2018" required style="border-color: #e5e7eb;">
                 </div>
 
                 <div>
-                  <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                  <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                     <i class="fa fa-calendar-check"></i>
                     <span>Tahun Lulus</span>
                     <span style="color: #ef4444;">*</span>
                   </label>
-                  <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: 2021" required style="border-color: #e5e7eb;">
+                  <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: 2021" required style="border-color: #e5e7eb;">
                 </div>
               </div>
 
               <div class="mb-5">
-                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                   <i class="fa fa-venus-mars"></i>
                   <span>Jenis Kelamin</span>
                   <span style="color: #ef4444;">*</span>
                 </label>
-                <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+                <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
                   <option value="">Pilih Jenis Kelamin</option>
                   <option value="Laki-laki">Laki-laki</option>
                   <option value="Perempuan">Perempuan</option>
@@ -663,31 +817,31 @@
               </div>
 
               <div class="mb-5">
-                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                   <i class="fa fa-university"></i>
                   <span>Kelanjutan Pendidikan</span>
                 </label>
-                <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: S1 Universitas Indonesia (Opsional)" style="border-color: #e5e7eb;">
-                <p class="text-sm mt-1" style="color: #6b7280;">Kosongkan jika tidak melanjutkan</p>
+                <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: S1 Universitas Indonesia (Opsional)" style="border-color: #e5e7eb;">
+                <p class="text-xs md:text-sm mt-1" style="color: #6b7280;">Kosongkan jika tidak melanjutkan</p>
               </div>
 
               <div class="mb-6">
-                <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+                <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                   <i class="fa fa-briefcase"></i>
                   <span>Tugas/Pekerjaan Saat Ini</span>
                 </label>
-                <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" placeholder="Contoh: Software Engineer di PT. ABC (Opsional)" style="border-color: #e5e7eb;">
-                <p class="text-sm mt-1" style="color: #6b7280;">Kosongkan jika tidak/belum bekerja</p>
+                <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" placeholder="Contoh: Software Engineer di PT. ABC (Opsional)" style="border-color: #e5e7eb;">
+                <p class="text-xs md:text-sm mt-1" style="color: #6b7280;">Kosongkan jika tidak/belum bekerja</p>
               </div>
 
               <div class="flex gap-3">
-                <button type="submit" class="btn-modern flex-1 py-4 px-6 font-semibold text-lg flex items-center justify-center gap-2" style="background-color: #10b981; color: #ffffff;">
+                <button type="submit" class="btn-modern flex-1 py-3 md:py-4 px-6 font-semibold text-base md:text-lg flex items-center justify-center gap-2" style="background-color: #10b981; color: #ffffff;">
                   <i class="fa fa-paper-plane"></i>
                   <span>Kirim Data</span>
                 </button>
               </div>
 
-              <div id="formMessage" class="mt-4 p-4 rounded-lg text-center font-semibold hidden"></div>
+              <div id="formMessage" class="mt-4 p-4 rounded-lg text-center font-semibold hidden text-sm md:text-base"></div>
             </form>
           </div>
         </div>
@@ -750,83 +904,83 @@
       modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
       modal.style.zIndex = '1000';
       modal.innerHTML = `
-        <div class="rounded-2xl shadow-2xl p-8 max-w-md w-full max-h-screen overflow-y-auto mx-4" style="background-color: #ffffff;">
+        <div class="rounded-2xl shadow-2xl p-6 md:p-8 max-w-md w-full max-h-screen overflow-y-auto mx-4" style="background-color: #ffffff;">
           <div class="text-center mb-6">
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="background-color: rgba(59, 130, 246, 0.1);">
               <i class="fa fa-user-plus text-3xl" style="color: #3b82f6;"></i>
             </div>
-            <h3 class="text-2xl font-bold" style="color: #1f2937;">Tambah Alumni</h3>
+            <h3 class="text-xl md:text-2xl font-bold" style="color: #1f2937;">Tambah Alumni</h3>
           </div>
           <form id="adminAlumniForm">
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-user"></i>
                 <span>Nama</span>
               </label>
-              <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+              <input type="text" name="nama" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-birthday-cake"></i>
                 <span>Tempat, Tanggal Lahir</span>
               </label>
-              <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+              <input type="text" name="ttl" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-calendar-alt"></i>
                 <span>Tahun Masuk</span>
               </label>
-              <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+              <input type="text" name="tahun_masuk" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-calendar-check"></i>
                 <span>Tahun Lulus</span>
               </label>
-              <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+              <input type="text" name="tahun_lulus" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-venus-mars"></i>
                 <span>Jenis Kelamin</span>
               </label>
-              <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+              <select name="jenis_kelamin" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
                 <option value="">Pilih</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
               </select>
             </div>
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-university"></i>
                 <span>Kelanjutan Pendidikan</span>
               </label>
-              <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" style="border-color: #e5e7eb;">
+              <input type="text" name="kelanjutan_pendidikan" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" style="border-color: #e5e7eb;">
             </div>
             <div class="mb-4">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-money-bill-wave"></i>
                 <span>Status Iuran</span>
               </label>
-              <select name="iuran_status" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" required style="border-color: #e5e7eb;">
+              <select name="iuran_status" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" required style="border-color: #e5e7eb;">
                 <option value="Belum Bayar">Belum Bayar</option>
                 <option value="Lunas">Lunas</option>
               </select>
             </div>
             <div class="mb-6">
-              <label class="block mb-2 font-semibold flex items-center gap-2" style="color: #1f2937;">
+              <label class="block mb-2 font-semibold flex items-center gap-2 text-sm md:text-base" style="color: #1f2937;">
                 <i class="fa fa-tasks"></i>
                 <span>Tugas</span>
               </label>
-              <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none" style="border-color: #e5e7eb;">
+              <input type="text" name="tugas" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none text-sm md:text-base" style="border-color: #e5e7eb;">
             </div>
             <div class="flex gap-3">
-              <button type="submit" class="btn-modern flex-1 py-3 px-4 font-semibold flex items-center justify-center gap-2" style="background-color: #3b82f6; color: #ffffff;">
+              <button type="submit" class="btn-modern flex-1 py-3 px-4 font-semibold flex items-center justify-center gap-2 text-sm md:text-base" style="background-color: #3b82f6; color: #ffffff;">
                 <i class="fa fa-save"></i>
                 <span>Simpan</span>
               </button>
-              <button type="button" class="btn-modern flex-1 py-3 px-4 font-semibold closeModal" style="background-color: #6b7280; color: #ffffff;">
+              <button type="button" class="btn-modern flex-1 py-3 px-4 font-semibold closeModal text-sm md:text-base" style="background-color: #6b7280; color: #ffffff;">
                 <i class="fa fa-times mr-2"></i>Batal
               </button>
             </div>
@@ -936,5 +1090,5 @@
     // Load initial page
     loadPage('beranda');
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1059f6513dfe09',t:'MTc2MzU2MjA1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1084a3d636fdc7',t:'MTc2MzU2MzgwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
